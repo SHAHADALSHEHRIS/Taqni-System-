@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 تسجيل الدخول المحدث</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Cairo', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(120deg, #eaf2fb 0%, #b6e2d3 60%, #f5f5dc 100%);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+            direction: rtl;
+        }
+        body:before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            background: url('https://www.transparenttextures.com/patterns/hexellence.png'),
+                        radial-gradient(circle at 80% 10%, #b6e2d3aa 0%, transparent 60%),
+                        radial-gradient(circle at 10% 80%, #f5f5dcaa 0%, transparent 60%);
+            opacity: 0.25;
+        }
+        body:after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            background: url('https://www.transparenttextures.com/patterns/hexellence.png'),
+                        radial-gradient(circle at 80% 10%, #b6e2d3aa 0%, transparent 60%),
+                        radial-gradient(circle at 10% 80%, #f5f5dcaa 0%, transparent 60%);
+            opacity: 0.4;
+        }
+
+        .login-form {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(234, 242, 251, 0.95) 0%, rgba(182, 226, 211, 0.95) 60%, rgba(245, 245, 220, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(59, 94, 77, 0.2);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            border: 2px solid rgba(182, 226, 211, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #b6e2d3 60%, #f5f5dc 100%);
+        }
+
+        .login-card h2 {
+            color: #2d5c8a;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(45, 92, 138, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #3b5e4d;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(182, 226, 211, 0.4);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: rgba(245, 245, 220, 0.1);
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #b6e2d3;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(182, 226, 211, 0.2);
+        }
+
+        .login-btn {
+            background: linear-gradient(90deg, #b6e2d3, #f5f5dc);
+            color: #3b5e4d;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(182, 226, 211, 0.3);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(90deg, #f5f5dc, #b6e2d3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(182, 226, 211, 0.4);
+        }
+
+        .error-message {
+            background: linear-gradient(90deg, rgba(231, 76, 60, 0.1), rgba(255, 255, 255, 0.1));
+            color: #c0392b;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 2px solid rgba(231, 76, 60, 0.2);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .success-message {
+            background: linear-gradient(90deg, rgba(39, 174, 96, 0.1), rgba(255, 255, 255, 0.1));
+            color: #27ae60;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 2px solid rgba(39, 174, 96, 0.2);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .icon-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-icon {
+            font-size: 3.5rem;
+            color: #2d5c8a;
+            text-shadow: 0 2px 4px rgba(45, 92, 138, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .demo-controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 3000;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .demo-btn {
+            background: linear-gradient(90deg, #b6e2d3, #f5f5dc);
+            color: #3b5e4d;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .demo-btn:hover {
+            background: linear-gradient(90deg, #f5f5dc, #b6e2d3);
+            transform: translateY(-2px);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- عناصر التحكم في العرض التوضيحي -->
+    <div class="demo-controls">
+        <h4 style="margin: 0 0 10px 0; color: #2d5c8a;">🎯 عرض توضيحي لتسجيل الدخول</h4>
+        <button class="demo-btn" onclick="showError()">عرض رسالة خطأ</button>
+        <button class="demo-btn" onclick="showSuccess()">عرض رسالة نجاح</button>
+        <button class="demo-btn" onclick="clearMessages()">مسح الرسائل</button>
+        <br>
+        <a href="admin.html" class="demo-btn" style="text-decoration: none; display: inline-block; margin-top: 5px;">
+            <i class="fas fa-arrow-right"></i> جرب النظام الفعلي
+        </a>
+    </div>
+
+    <!-- نافذة تسجيل الدخول -->
+    <div class="login-form">
+        <div class="login-card">
+            <div class="icon-container">
+                <i class="fas fa-user-shield login-icon"></i>
+            </div>
+            <h2>تسجيل دخول الإدارة</h2>
+            
+            <div id="loginError" class="error-message hidden"></div>
+            <div id="loginSuccess" class="success-message hidden"></div>
+            
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="employeeId">رقم الموظف:</label>
+                    <input type="text" id="employeeId" value="admin" required>
+                    <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 5px;">
+                        جرب: admin, manager, user, test, 1001
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="password">كلمة المرور:</label>
+                    <input type="password" id="password" value="admin123" required>
+                    <small style="color: #666; font-size: 0.85rem; display: block; margin-top: 5px;">
+                        admin123, 123456, 123, test
+                    </small>
+                </div>
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> دخول لوحة التحكم
+                </button>
+            </form>
+
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid rgba(182, 226, 211, 0.2);">
+                <p style="color: #666; font-size: 0.9rem; margin: 10px 0;">
+                    <strong>💡 التحسينات الجديدة:</strong>
+                </p>
+                <ul style="color: #666; font-size: 0.85rem; text-align: right; list-style: none; padding: 0;">
+                    <li>✅ خلفية متدرجة بألوان موقعك</li>
+                    <li>✅ بطاقة تسجيل دخول محسنة</li>
+                    <li>✅ حقول إدخال بتصميم جديد</li>
+                    <li>✅ أزرار بألوان متطابقة</li>
+                    <li>✅ تأثيرات بصرية ناعمة</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const employeeId = document.getElementById('employeeId').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            clearMessages();
+            
+            // محاكاة عملية تسجيل الدخول
+            if (employeeId === 'admin' && password === 'admin123') {
+                showSuccess('تم تسجيل الدخول بنجاح! سيتم توجيهك للوحة التحكم...');
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 2000);
+            } else if (employeeId === 'test' && password === 'test') {
+                showSuccess('مرحباً بك في النظام التجريبي!');
+            } else {
+                showError('اسم المستخدم أو كلمة المرور غير صحيحة');
+            }
+        });
+
+        function showError(message = 'مثال على رسالة خطأ في تسجيل الدخول') {
+            clearMessages();
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+
+        function showSuccess(message = 'مثال على رسالة نجاح في تسجيل الدخول') {
+            clearMessages();
+            const successDiv = document.getElementById('loginSuccess');
+            successDiv.textContent = message;
+            successDiv.classList.remove('hidden');
+        }
+
+        function clearMessages() {
+            document.getElementById('loginError').classList.add('hidden');
+            document.getElementById('loginSuccess').classList.add('hidden');
+        }
+
+        // تأثير فتح النافذة
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginCard = document.querySelector('.login-card');
+            loginCard.style.transform = 'translateY(30px)';
+            loginCard.style.opacity = '0';
+            
+            setTimeout(() => {
+                loginCard.style.transition = 'all 0.5s ease-out';
+                loginCard.style.transform = 'translateY(0)';
+                loginCard.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

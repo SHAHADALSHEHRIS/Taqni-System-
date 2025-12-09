@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>فحص أخطاء JavaScript</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; direction: rtl; }
+        .console { background: #000; color: #0f0; padding: 15px; border-radius: 5px; font-family: monospace; }
+        button { background: #b6e2d3; color: #3b5e4d; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 فحص أخطاء JavaScript</h1>
+    
+    <button onclick="testBasicAPI()">اختبار API أساسي</button>
+    <button onclick="testFetch()">اختبار Fetch</button>
+    <button onclick="testDBAPI()">اختبار dbAPI</button>
+    
+    <div id="console" class="console"></div>
+    
+    <script src="js/api.js"></script>
+    <script>
+        const consoleDiv = document.getElementById('console');
+        
+        function addToConsole(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#f00' : type === 'success' ? '#0f0' : '#fff';
+            consoleDiv.innerHTML += `<div style="color:${color}">[${timestamp}] ${message}</div>`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+        
+        // اعتراض أخطاء JavaScript
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            addToConsole(`❌ خطأ JS: ${msg} في السطر ${lineNo}`, 'error');
+            return false;
+        };
+        
+        window.addEventListener('unhandledrejection', function(event) {
+            addToConsole(`❌ Promise مرفوض: ${event.reason}`, 'error');
+        });
+        
+        async function testBasicAPI() {
+            addToConsole('🔍 اختبار API أساسي...');
+            
+            try {
+                const response = await fetch('api/requests.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({action: 'get_all'})
+                });
+                
+                addToConsole(`📡 حالة HTTP: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                const result = await response.json();
+                addToConsole(`📥 استجابة API: ${JSON.stringify(result).substring(0, 200)}...`);
+                
+                if (result.success) {
+                    addToConsole(`✅ API يعمل - عدد الطلبات: ${result.requests?.length || 0}`, 'success');
+                } else {
+                    addToConsole(`❌ خطأ API: ${result.message}`, 'error');
+                }
+                
+            } catch (error) {
+                addToConsole(`❌ خطأ في الاتصال: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testFetch() {
+            addToConsole('🌐 اختبار Fetch مباشر...');
+            
+            try {
+                const testData = {
+                    action: 'create',
+                    user_id: 1,
+                    request_type: 'fetch_test',
+                    subject: 'اختبار Fetch مباشر',
+                    description: 'اختبار إضافة طلب باستخدام Fetch مباشرة',
+                    priority: 'medium'
+                };
+                
+                addToConsole(`📤 إرسال بيانات: ${JSON.stringify(testData)}`);
+                
+                const response = await fetch('api/requests.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(testData)
+                });
+                
+                addToConsole(`📡 حالة HTTP: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                const result = await response.json();
+                addToConsole(`📥 استجابة إضافة الطلب: ${JSON.stringify(result)}`);
+                
+                if (result.success) {
+                    addToConsole(`✅ تم إضافة الطلب بنجاح! ID: ${result.request_id}`, 'success');
+                } else {
+                    addToConsole(`❌ فشل في إضافة الطلب: ${result.message}`, 'error');
+                }
+                
+            } catch (error) {
+                addToConsole(`❌ خطأ في Fetch: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testDBAPI() {
+            addToConsole('🗄️ اختبار dbAPI...');
+            
+            try {
+                if (typeof dbAPI === 'undefined') {
+                    addToConsole('❌ dbAPI غير موجود!', 'error');
+                    return;
+                }
+                
+                addToConsole('✅ dbAPI موجود');
+                
+                const testData = {
+                    user_id: 1,
+                    request_type: 'dbapi_test',
+                    subject: 'اختبار dbAPI',
+                    description: 'اختبار إضافة طلب باستخدام dbAPI',
+                    priority: 'medium'
+                };
+                
+                addToConsole(`📤 إرسال عبر dbAPI: ${JSON.stringify(testData)}`);
+                
+                const result = await dbAPI.createRequest(testData);
+                addToConsole(`📥 نتيجة dbAPI: ${JSON.stringify(result)}`);
+                
+                if (result.success) {
+                    addToConsole(`✅ dbAPI يعمل بنجاح! ID: ${result.request_id}`, 'success');
+                } else {
+                    addToConsole(`❌ خطأ في dbAPI: ${result.message}`, 'error');
+                }
+                
+            } catch (error) {
+                addToConsole(`❌ خطأ في dbAPI: ${error.message}`, 'error');
+            }
+        }
+        
+        // اختبار تلقائي
+        addToConsole('🌐 تم تحميل صفحة فحص الأخطاء');
+        addToConsole(`📍 المسار: ${window.location.href}`);
+        addToConsole('⏳ بدء الاختبارات التلقائية...');
+        
+        setTimeout(() => {
+            testBasicAPI();
+        }, 1000);
+    </script>
+</body>
+</html>

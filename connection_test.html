@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار سريع للاتصال</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .status { padding: 15px; margin: 10px 0; border-radius: 8px; font-weight: bold; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .testing { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .btn { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .btn:hover { background: #0056b3; }
+        h1 { color: #333; text-align: center; }
+        .test-result { margin: 15px 0; padding: 10px; background: #f8f9fa; border-left: 4px solid #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 اختبار سريع للاتصال بالخادم</h1>
+        
+        <div id="server-status" class="status testing">
+            🔄 جاري فحص الاتصال بالخادم...
+        </div>
+        
+        <div id="db-status" class="status testing">
+            🔄 جاري فحص قاعدة البيانات...
+        </div>
+        
+        <div id="api-status" class="status testing">
+            🔄 جاري فحص APIs...
+        </div>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <button class="btn" onclick="testAll()">🔄 إعادة الاختبار</button>
+            <button class="btn" onclick="window.location.href='admin.html'">📊 صفحة الإدارة</button>
+            <button class="btn" onclick="window.location.href='system_check.html'">🔍 فحص شامل</button>
+        </div>
+        
+        <div id="test-results"></div>
+        
+        <div class="test-result">
+            <h3>📋 معلومات مهمة:</h3>
+            <ul>
+                <li><strong>رابط صفحة الإدارة:</strong> <a href="admin.html">admin.html</a></li>
+                <li><strong>رقم الموظف:</strong> 1001</li>
+                <li><strong>كلمة المرور:</strong> admin123</li>
+                <li><strong>الخادم:</strong> http://localhost/projeect/</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let testResults = [];
+
+        function updateStatus(elementId, message, isSuccess = null) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            
+            if (isSuccess === true) {
+                element.className = 'status success';
+            } else if (isSuccess === false) {
+                element.className = 'status error';
+            } else {
+                element.className = 'status testing';
+            }
+        }
+
+        function addTestResult(test, result, details = '') {
+            testResults.push({ test, result, details, time: new Date().toLocaleTimeString() });
+            updateTestResults();
+        }
+
+        function updateTestResults() {
+            const container = document.getElementById('test-results');
+            if (testResults.length === 0) return;
+            
+            container.innerHTML = '<h3>📊 نتائج الاختبارات:</h3>' + 
+                testResults.map(r => `
+                    <div class="test-result">
+                        <strong>${r.result ? '✅' : '❌'} ${r.test}</strong> - ${r.time}
+                        ${r.details ? `<br><small>${r.details}</small>` : ''}
+                    </div>
+                `).join('');
+        }
+
+        async function testServer() {
+            updateStatus('server-status', '🔄 جاري فحص الخادم...');
+            
+            try {
+                const response = await fetch('test_connection.php');
+                if (response.ok) {
+                    updateStatus('server-status', '✅ الخادم يعمل بشكل طبيعي', true);
+                    addTestResult('اتصال الخادم', true, 'HTTP Status: ' + response.status);
+                    return true;
+                } else {
+                    updateStatus('server-status', '❌ مشكلة في الخادم: ' + response.status, false);
+                    addTestResult('اتصال الخادم', false, 'HTTP Status: ' + response.status);
+                    return false;
+                }
+            } catch (error) {
+                updateStatus('server-status', '❌ فشل الاتصال بالخادم: ' + error.message, false);
+                addTestResult('اتصال الخادم', false, error.message);
+                return false;
+            }
+        }
+
+        async function testDatabase() {
+            updateStatus('db-status', '🔄 جاري فحص قاعدة البيانات...');
+            
+            try {
+                const response = await fetch('api_test_simple.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateStatus('db-status', `✅ قاعدة البيانات متصلة (${data.total_requests} طلب)`, true);
+                    addTestResult('قاعدة البيانات', true, `${data.total_requests} طلبات موجودة`);
+                    return true;
+                } else {
+                    updateStatus('db-status', '❌ مشكلة في قاعدة البيانات: ' + data.error, false);
+                    addTestResult('قاعدة البيانات', false, data.error);
+                    return false;
+                }
+            } catch (error) {
+                updateStatus('db-status', '❌ خطأ في فحص قاعدة البيانات: ' + error.message, false);
+                addTestResult('قاعدة البيانات', false, error.message);
+                return false;
+            }
+        }
+
+        async function testAPIs() {
+            updateStatus('api-status', '🔄 جاري فحص APIs...');
+            
+            try {
+                // Test Statistics API
+                const statsResponse = await fetch('api/requests.php?action=getStatistics');
+                const statsData = await statsResponse.json();
+                
+                if (statsData.success) {
+                    updateStatus('api-status', '✅ جميع APIs تعمل بشكل طبيعي', true);
+                    addTestResult('APIs', true, 'API الإحصائيات يعمل');
+                    return true;
+                } else {
+                    updateStatus('api-status', '❌ مشكلة في APIs', false);
+                    addTestResult('APIs', false, 'فشل API الإحصائيات');
+                    return false;
+                }
+            } catch (error) {
+                updateStatus('api-status', '❌ خطأ في فحص APIs: ' + error.message, false);
+                addTestResult('APIs', false, error.message);
+                return false;
+            }
+        }
+
+        async function testAll() {
+            testResults = []; // Clear previous results
+            updateTestResults();
+            
+            const serverOk = await testServer();
+            if (serverOk) {
+                await testDatabase();
+                await testAPIs();
+            }
+        }
+
+        // Run tests on page load
+        window.onload = testAll;
+    </script>
+</body>
+</html>

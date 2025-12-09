@@ -1,0 +1,284 @@
+	<!DOCTYPE html>
+	<html lang="ar">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>الصفحة الرئيسية - النظام الإداري</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+		<style>
+			body {
+				font-family: 'Cairo', Arial, sans-serif;
+				margin: 0;
+				padding: 0;
+				min-height: 100vh;
+				background: linear-gradient(120deg, #eaf2fb 0%, #b6e2d3 60%, #f5f5dc 100%);
+				background-repeat: no-repeat;
+				background-attachment: fixed;
+				position: relative;
+			}
+			body:before {
+				content: '';
+				position: fixed;
+				top: 0; left: 0; width: 100vw; height: 100vh;
+				z-index: 0;
+				pointer-events: none;
+				background: url('https://www.transparenttextures.com/patterns/hexellence.png'),
+							radial-gradient(circle at 80% 10%, #b6e2d3aa 0%, transparent 60%),
+							radial-gradient(circle at 10% 80%, #f5f5dcaa 0%, transparent 60%);
+				opacity: 0.25;
+			}
+			body:after {
+				content: '';
+				position: fixed;
+				top: 0; left: 0; width: 100vw; height: 100vh;
+				z-index: 0;
+				pointer-events: none;
+				background: url('https://www.transparenttextures.com/patterns/hexellence.png'),
+							radial-gradient(circle at 80% 10%, #b6e2d3aa 0%, transparent 60%),
+							radial-gradient(circle at 10% 80%, #f5f5dcaa 0%, transparent 60%);
+				opacity: 0.4;
+			}
+			.header {
+				background: linear-gradient(90deg, #b6e2d3 60%, #f5f5dc 100%);
+				color: #2d5c8a;
+				padding: 22px 0 16px 0;
+				text-align: center;
+				font-size: 3.2rem;
+				letter-spacing: 2.5px;
+				box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+				border-bottom-left-radius: 60px;
+				border-bottom-right-radius: 60px;
+				font-family: 'Cairo', Arial, sans-serif;
+				font-weight: 900;
+				text-shadow: 2px 4px 18px #2d5c8a33, 0 1px 0 #fff;
+				position: relative;
+				z-index: 2;
+				letter-spacing: 2.5px;
+			}
+			.main-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				margin-top: 60px;
+			}
+			.icon-links {
+			display: flex;
+			flex-direction: row-reverse;
+			justify-content: center;
+			gap: 56px;
+			margin-top: 48px;
+			}
+			.icon-link {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				background: linear-gradient(120deg,#b6e2d3 60%,#e6f4ea 100%);
+				color: #3b5e4d;
+				text-decoration: none;
+				padding: 38px 44px;
+				border-radius: 32px;
+				box-shadow: 0 6px 24px #b6e2d344;
+				font-size: 1.7rem;
+				font-weight: bold;
+				transition: background 0.2s, color 0.2s, transform 0.2s;
+				min-width: 170px;
+				border: 2px solid #b6e2d3;
+			}
+			.icon-link:hover {
+				background: linear-gradient(120deg,#a3d9c7 60%,#e6f4ea 100%);
+				color: #2d5c8a;
+				transform: translateY(-10px) scale(1.11);
+				box-shadow: 0 10px 32px #b6e2d344;
+			}
+			.icon-link i {
+				font-size: 4.2rem;
+				margin-bottom: 18px;
+				color: #2d5c8a;
+				transition: color 0.2s;
+			}
+			.header-box {
+				background: #e6f4ea;
+				color: #3b5e4d;
+				border-radius: 14px;
+				padding: 10px 24px;
+				font-size: 1.1rem;
+				box-shadow: 0 2px 8px #b6e2d322;
+				font-weight: bold;
+			}
+		</style>
+	</head>
+	<body style="min-height:100vh;overflow-x:hidden;overflow-y:auto;">
+	<div class="header">الإدارة العامة</div>
+	<div style="display:flex; flex-direction:row-reverse; min-height:80vh;">
+		<div id="sideBarUT" style="width:220px; min-width:180px; background:linear-gradient(120deg,#eaf2fb 0%,#b6e2d3 60%,#f5f5dc 100%); border-radius:32px 0 0 32px; box-shadow:0 8px 32px #b6e2d344; margin:32px 0 32px 32px; padding:32px 0; display:flex; flex-direction:column; gap:22px; align-items:flex-end; border:2px solid #e0e6f3;">
+			<a href="#" id="editUserBtn" class="ut-link" style="margin-left:18px;">
+				<span class="ut-icon" style="background:#eaf2fb;"><i class="fa-solid fa-user-pen"></i></span>
+				<span class="ut-label">التسجيل الإلكتروني</span>
+			</a>
+			<a href="#" id="editOrderBtn" class="ut-link" style="margin-left:18px;">
+				<span class="ut-icon" style="background:#eaf2fb;"><i class="fa-solid fa-file-pen"></i></span>
+				<span class="ut-label">تعديل الطلبات</span>
+			</a>
+			<a href="#" id="contactAdminBtn" class="ut-link" style="margin-left:18px;">
+				<span class="ut-icon" style="background:#eaf2fb;"><i class="fa-solid fa-envelope-open-text"></i></span>
+				<span class="ut-label">التواصل مع الإدارة</span>
+			</a>
+		</div>
+		<div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+			<div class="main-container">
+				<div class="icon-links">
+					<a class="icon-link" href="request.html"><i class="fa-solid fa-file-circle-plus"></i>تقديم طلب</a>
+					<a class="icon-link" href="track.html"><i class="fa-solid fa-list-check"></i>تتبع الطلبات</a>
+					<a class="icon-link" href="admin.html"><i class="fa-solid fa-user-gear"></i>الإدارة</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- نافذة تعديل بيانات المستخدم -->
+	<div id="editUserModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#00000044;z-index:100;align-items:center;justify-content:center;">
+		<div style="background:#fff;padding:38px 44px;border-radius:24px;box-shadow:0 6px 24px #b6e2d344;min-width:320px;max-width:90vw;">
+			<h2 style="color:#2d5c8a;margin-bottom:18px;">تعديل بيانات المستخدم</h2>
+			<form id="userEditForm" style="display:flex;flex-direction:column;gap:16px;">
+				<label>اسم المستخدم:<input type="text" name="username" style="padding:8px 12px;border-radius:8px;border:1.5px solid #b6e2d3;"></label>
+				<label>كلمة المرور الجديدة:<input type="password" name="password" style="padding:8px 12px;border-radius:8px;border:1.5px solid #b6e2d3;"></label>
+				<button type="submit" style="background:linear-gradient(90deg,#b6e2d3,#f5f5dc);color:#3b5e4d;border:none;border-radius:10px;padding:8px 28px;font-weight:bold;box-shadow:0 2px 12px #b6e2d322;cursor:pointer;">حفظ التعديلات</button>
+				<button type="button" onclick="closeModal('editUserModal')" style="background:#ef4444;color:#fff;border:none;border-radius:10px;padding:8px 28px;font-weight:bold;box-shadow:0 2px 12px #b6e2d322;cursor:pointer;">إغلاق</button>
+			</form>
+			<div id="userEditMsg" style="display:none;color:#27ae60;font-weight:bold;margin-top:8px;">تم حفظ التعديلات بنجاح!</div>
+		</div>
+	</div>
+
+	<!-- نافذة تعديل الطلبات -->
+	<div id="editOrderModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#00000044;z-index:100;align-items:center;justify-content:center;">
+		<div style="background:#fff;padding:38px 44px;border-radius:24px;box-shadow:0 6px 24px #b6e2d344;min-width:320px;max-width:90vw;">
+			<h2 style="color:#2d5c8a;margin-bottom:18px;">تعديل الطلبات</h2>
+			<form id="orderEditForm" style="display:flex;flex-direction:column;gap:16px;">
+				<label>رقم الطلب:<input type="number" name="orderId" style="padding:8px 12px;border-radius:8px;border:1.5px solid #b6e2d3;"></label>
+				<label>نص الطلب الجديد:<input type="text" name="orderText" style="padding:8px 12px;border-radius:8px;border:1.5px solid #b6e2d3;"></label>
+				<button type="submit" style="background:linear-gradient(90deg,#b6e2d3,#f5f5dc);color:#3b5e4d;border:none;border-radius:10px;padding:8px 28px;font-weight:bold;box-shadow:0 2px 12px #b6e2d322;cursor:pointer;">حفظ التعديل</button>
+				<button type="button" onclick="closeModal('editOrderModal')" style="background:#ef4444;color:#fff;border:none;border-radius:10px;padding:8px 28px;font-weight:bold;box-shadow:0 2px 12px #b6e2d322;cursor:pointer;">إغلاق</button>
+			</form>
+			<div id="orderEditMsg" style="display:none;color:#27ae60;font-weight:bold;margin-top:8px;">تم تعديل الطلب بنجاح!</div>
+		</div>
+	</div>
+
+	<!-- نافذة التواصل مع الإدارة -->
+	<div id="contactAdminModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#00000044;z-index:100;align-items:center;justify-content:center;">
+		<div style="background:#fff;padding:38px 44px;border-radius:24px;box-shadow:0 6px 24px #b6e2d344;min-width:320px;max-width:90vw;">
+			<h2 style="color:#2d5c8a;margin-bottom:18px;">التواصل مع الإدارة</h2>
+			<form id="contactForm" style="display:flex;flex-direction:column;gap:16px;">
+				<label>الموضوع:<input type="text" name="subject" style="padding:8px 12px;border-radius:8px;border:1.5px solid #b6e2d3;"></label>
+				<label>الرسالة:<textarea name="message" rows="4" style="padding:8px 12px;border-radius:8px;border:1.5px solid #b6e2d3;"></textarea></label>
+				<button type="submit" style="background:linear-gradient(90deg,#b6e2d3,#f5f5dc);color:#3b5e4d;border:none;border-radius:10px;padding:8px 28px;font-weight:bold;box-shadow:0 2px 12px #b6e2d322;cursor:pointer;">إرسال</button>
+				<button type="button" onclick="closeModal('contactAdminModal')" style="background:#ef4444;color:#fff;border:none;border-radius:10px;padding:8px 28px;font-weight:bold;box-shadow:0 2px 12px #b6e2d322;cursor:pointer;">إغلاق</button>
+			</form>
+			<div id="contactMsg" style="display:none;color:#27ae60;font-weight:bold;margin-top:8px;">تم إرسال الرسالة بنجاح!</div>
+		</div>
+	</div>
+
+	<script>
+		function closeModal(id) {
+			document.getElementById(id).style.display = 'none';
+		}
+		document.getElementById('editUserBtn').onclick = function() {
+			document.getElementById('editUserModal').style.display = 'flex';
+		};
+		document.getElementById('editOrderBtn').onclick = function() {
+			document.getElementById('editOrderModal').style.display = 'flex';
+		};
+		document.getElementById('contactAdminBtn').onclick = function() {
+			document.getElementById('contactAdminModal').style.display = 'flex';
+		};
+
+		// حفظ بيانات المستخدم
+		document.getElementById('userEditForm').onsubmit = function(e) {
+			e.preventDefault();
+			// هنا يمكن حفظ البيانات في LocalStorage أو إرسالها للسيرفر
+			document.getElementById('userEditMsg').style.display = 'block';
+			setTimeout(function(){
+				document.getElementById('userEditMsg').style.display = 'none';
+				closeModal('editUserModal');
+			}, 1200);
+		};
+		// تعديل الطلبات
+		document.getElementById('orderEditForm').onsubmit = function(e) {
+			e.preventDefault();
+			// هنا يمكن تعديل الطلب في LocalStorage
+			document.getElementById('orderEditMsg').style.display = 'block';
+			setTimeout(function(){
+				document.getElementById('orderEditMsg').style.display = 'none';
+				closeModal('editOrderModal');
+			}, 1200);
+		};
+		// التواصل مع الإدارة
+		document.getElementById('contactForm').onsubmit = function(e) {
+			e.preventDefault();
+			document.getElementById('contactMsg').style.display = 'block';
+			setTimeout(function(){
+				document.getElementById('contactMsg').style.display = 'none';
+				closeModal('contactAdminModal');
+			}, 1200);
+		};
+	</script>
+	<footer style="width:100%;text-align:center;margin:48px 0 12px 0;">
+		<span style="font-size:0.95rem;color:#3b5e4d;opacity:0.7;">الدعم الفني: 0555555555</span>
+	</footer>
+</body>
+	<style>
+		.ut-link {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 12px 22px 12px 14px;
+			color: #2d5c8a;
+			text-decoration: none;
+			font-weight: bold;
+			font-size: 1.08rem;
+			border-radius: 16px;
+			transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+			width: 90%;
+			box-shadow: 0 2px 8px #b6e2d322;
+			background: linear-gradient(90deg,#eaf2fb 60%,#b6e2d3 100%);
+		}
+		.ut-link:hover {
+			background: linear-gradient(90deg,#b6e2d3 60%,#eaf2fb 100%);
+			color: #3b5e4d;
+			box-shadow: 0 6px 18px #b6e2d344;
+		}
+		.ut-icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 36px;
+			height: 36px;
+			border-radius: 50%;
+			font-size: 1.45rem;
+			color: #2d5c8a;
+			background: #fff;
+			box-shadow: 0 2px 8px #b6e2d344;
+			transition: background 0.2s, color 0.2s;
+		}
+		.ut-label {
+			font-size: 1.08rem;
+			font-weight: bold;
+			color: #2d5c8a;
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

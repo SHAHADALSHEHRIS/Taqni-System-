@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>اختبار البيانات</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .result { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        button { padding: 10px 20px; margin: 5px; background: #007cba; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #005a8b; }
+    </style>
+</head>
+<body>
+    <h1>اختبار البيانات</h1>
+    
+    <button onclick="testAPI()">اختبار API</button>
+    <button onclick="testStats()">اختبار الإحصائيات</button>
+    <button onclick="testRatings()">اختبار التقييمات</button>
+    <button onclick="testRequests()">اختبار الطلبات</button>
+    <button onclick="addTestData()">إضافة بيانات تجريبية</button>
+    
+    <div id="results"></div>
+
+    <script>
+        function addResult(title, data, isSuccess = true) {
+            const resultsDiv = document.getElementById('results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'result';
+            resultDiv.style.background = isSuccess ? '#d4edda' : '#f8d7da';
+            resultDiv.innerHTML = `<h3>${title}</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        async function testAPI() {
+            try {
+                const response = await fetch('http://localhost/projeect/api/requests.php?action=test');
+                const data = await response.json();
+                addResult('✅ اختبار API', data, data.success);
+            } catch (error) {
+                addResult('❌ خطأ في API', { error: error.message }, false);
+            }
+        }
+
+        async function testStats() {
+            try {
+                const response = await fetch('http://localhost/projeect/api/requests.php?action=get_statistics');
+                const data = await response.json();
+                addResult('📊 الإحصائيات', data, data.success);
+            } catch (error) {
+                addResult('❌ خطأ في الإحصائيات', { error: error.message }, false);
+            }
+        }
+
+        async function testRatings() {
+            try {
+                const response = await fetch('http://localhost/projeect/api/requests.php?action=get_ratings');
+                const data = await response.json();
+                addResult('⭐ التقييمات', data, data.success);
+            } catch (error) {
+                addResult('❌ خطأ في التقييمات', { error: error.message }, false);
+            }
+        }
+
+        async function testRequests() {
+            try {
+                const response = await fetch('http://localhost/projeect/api/requests.php?action=get_all');
+                const data = await response.json();
+                addResult('📋 الطلبات', data, data.success);
+            } catch (error) {
+                addResult('❌ خطأ في الطلبات', { error: error.message }, false);
+            }
+        }
+
+        async function addTestData() {
+            try {
+                // إضافة طلب تجريبي
+                const requestData = {
+                    action: 'create',
+                    user_id: 2,
+                    request_type: 'technical',
+                    subject: 'طلب تجريبي',
+                    description: 'هذا طلب تجريبي لاختبار النظام',
+                    priority: 'medium'
+                };
+
+                const response = await fetch('http://localhost/projeect/api/requests.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                const data = await response.json();
+                addResult('➕ إضافة بيانات تجريبية', data, data.success);
+
+                // إضافة تقييم تجريبي إذا نجح إنشاء الطلب
+                if (data.success && data.id) {
+                    const ratingData = {
+                        action: 'rate_request',
+                        request_id: data.id,
+                        user_id: 2,
+                        quality_rate: 4,
+                        speed_rate: 5,
+                        comments: 'تقييم تجريبي ممتاز'
+                    };
+
+                    const ratingResponse = await fetch('http://localhost/projeect/api/requests.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(ratingData)
+                    });
+
+                    const ratingResult = await ratingResponse.json();
+                    addResult('⭐ إضافة تقييم تجريبي', ratingResult, ratingResult.success);
+                }
+
+            } catch (error) {
+                addResult('❌ خطأ في إضافة البيانات', { error: error.message }, false);
+            }
+        }
+
+        // اختبار تلقائي عند تحميل الصفحة
+        window.onload = function() {
+            testAPI();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار اتصال قاعدة البيانات</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+            direction: rtl;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #34495e;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        button.success {
+            background: #27ae60;
+        }
+        button.error {
+            background: #e74c3c;
+        }
+        .result {
+            background: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success-result {
+            border-color: #27ae60;
+            background: #d5f4e6;
+        }
+        .error-result {
+            border-color: #e74c3c;
+            background: #fdf2f2;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status.online {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+        .status.offline {
+            background: #fdf2f2;
+            color: #e74c3c;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .loading {
+            color: #f39c12;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 اختبار اتصال الموقع بقاعدة البيانات</h1>
+        
+        <div class="test-section">
+            <h3>🔍 اختبارات سريعة</h3>
+            <button onclick="testAll()">🚀 تشغيل جميع الاختبارات</button>
+            <button onclick="clearResults()">🗑️ مسح النتائج</button>
+            <button onclick="checkServerStatus()">🖥️ حالة الخادم</button>
+        </div>
+
+        <div class="grid">
+            <!-- اختبار الاتصال الأساسي -->
+            <div class="test-section">
+                <h3>1️⃣ اختبار الاتصال الأساسي</h3>
+                <button onclick="testBasicConnection()">اختبار الاتصال</button>
+                <div id="basic-result" class="result"></div>
+            </div>
+
+            <!-- اختبار API -->
+            <div class="test-section">
+                <h3>2️⃣ اختبار API</h3>
+                <button onclick="testAPIEndpoint()">اختبار requests.php</button>
+                <button onclick="testAPIStatistics()">اختبار الإحصائيات</button>
+                <div id="api-result" class="result"></div>
+            </div>
+
+            <!-- اختبار قاعدة البيانات -->
+            <div class="test-section">
+                <h3>3️⃣ اختبار قاعدة البيانات</h3>
+                <button onclick="testDatabaseConnection()">اختبار الاتصال</button>
+                <button onclick="testDatabaseData()">اختبار البيانات</button>
+                <div id="database-result" class="result"></div>
+            </div>
+
+            <!-- اختبار الطلبات -->
+            <div class="test-section">
+                <h3>4️⃣ اختبار الطلبات</h3>
+                <button onclick="testGetRequests()">جلب الطلبات</button>
+                <button onclick="testCreateRequest()">إنشاء طلب</button>
+                <div id="requests-result" class="result"></div>
+            </div>
+
+            <!-- اختبار التقييمات -->
+            <div class="test-section">
+                <h3>5️⃣ اختبار التقييمات</h3>
+                <button onclick="testGetRatings()">جلب التقييمات</button>
+                <button onclick="testCreateRating()">إنشاء تقييم</button>
+                <div id="ratings-result" class="result"></div>
+            </div>
+
+            <!-- اختبار JavaScript API -->
+            <div class="test-section">
+                <h3>6️⃣ اختبار JavaScript API</h3>
+                <button onclick="testJavaScriptAPI()">اختبار database_new.js</button>
+                <div id="js-api-result" class="result"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 ملخص النتائج</h3>
+            <div id="summary" class="result"></div>
+        </div>
+    </div>
+
+    <script src="js/database_new.js"></script>
+    <script>
+        let testResults = {};
+        let dbAPI = new DatabaseAPI();
+
+        function addResult(sectionId, title, data, isSuccess = true) {
+            const section = document.getElementById(sectionId);
+            const timestamp = new Date().toLocaleString('ar-SA');
+            const status = isSuccess ? '✅ نجح' : '❌ فشل';
+            const cssClass = isSuccess ? 'success-result' : 'error-result';
+            
+            const result = `[${timestamp}] ${status} - ${title}\n${JSON.stringify(data, null, 2)}\n\n`;
+            section.innerHTML += `<div class="${cssClass}">${result}</div>`;
+            section.scrollTop = section.scrollHeight;
+            
+            // حفظ النتيجة للملخص
+            testResults[title] = { success: isSuccess, data: data, timestamp: timestamp };
+        }
+
+        function updateSummary() {
+            const summary = document.getElementById('summary');
+            const total = Object.keys(testResults).length;
+            const passed = Object.values(testResults).filter(r => r.success).length;
+            const failed = total - passed;
+            
+            let summaryText = `📊 ملخص الاختبارات:\n`;
+            summaryText += `• إجمالي الاختبارات: ${total}\n`;
+            summaryText += `• نجح: ${passed} ✅\n`;
+            summaryText += `• فشل: ${failed} ❌\n`;
+            summaryText += `• نسبة النجاح: ${total > 0 ? Math.round((passed/total) * 100) : 0}%\n\n`;
+            
+            summaryText += `تفاصيل النتائج:\n`;
+            for (const [test, result] of Object.entries(testResults)) {
+                const icon = result.success ? '✅' : '❌';
+                summaryText += `${icon} ${test} - ${result.timestamp}\n`;
+            }
+            
+            summary.innerHTML = summaryText;
+        }
+
+        async function testBasicConnection() {
+            try {
+                addResult('basic-result', 'بدء اختبار الاتصال الأساسي', { status: 'بدء الاختبار...' });
+                
+                const response = await fetch(window.location.origin);
+                const isSuccess = response.ok;
+                
+                addResult('basic-result', 'اختبار الاتصال الأساسي', {
+                    url: window.location.origin,
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: Object.fromEntries(response.headers.entries())
+                }, isSuccess);
+                
+            } catch (error) {
+                addResult('basic-result', 'اختبار الاتصال الأساسي', {
+                    error: error.message,
+                    stack: error.stack
+                }, false);
+            }
+            updateSummary();
+        }
+
+        async function testAPIEndpoint() {
+            try {
+                const url = 'http://localhost/projeect/api/requests.php?action=test';
+                addResult('api-result', 'بدء اختبار API', { url: url });
+                
+                const response = await fetch(url);
+                const text = await response.text();
+                
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    data = { rawResponse: text, parseError: e.message };
+                }
+                
+                addResult('api-result', 'اختبار نقطة نهاية API', {
+                    url: url,
+                    status: response.status,
+                    data: data
+                }, response.ok && data.success);
+                
+            } catch (error) {
+                addResult('api-result', 'اختبار نقطة نهاية API', {
+                    error: error.message
+                }, false);
+            }
+            updateSummary();
+        }
+
+        async function testAPIStatistics() {
+            try {
+                const url = 'http://localhost/projeect/api/requests.php?action=get_statistics';
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                addResult('api-result', 'اختبار إحصائيات API', {
+                    url: url,
+                    status: response.status,
+                    data: data
+                }, response.ok && data.success);
+                
+            } catch (error) {
+                addResult('api-result', 'اختبار إحصائيات API', {
+                    error: error.message
+                }, false);
+            }
+            updateSummary();
+        }
+
+        async function testDatabaseConnection() {
+            try {
+                // اختبار الاتصال عبر PHP منفصل
+                const url = 'http://localhost/projeect/test_db_connection.php';
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                addResult('database-result', 'اختبار اتصال قاعدة البيانات', {
+                    url: url,
+                    data: data
+                }, data.success);
+                
+            } catch (error) {
+                addResult('database-result', 'اختبار اتصال قاعدة البيانات', {
+                    error: error.message
+                }, false);
+            }
+            updateSummary();
+        }
+
+        async function testDatabaseData() {
+            try {
+                const url = 'http://localhost/projeect/api/requests.php?action=get_all';
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                addResult('database-result', 'اختبار بيانات قاعدة البيانات', {
+                    url: url,
+                    recordCount: data.data ? data.data.length : 0,
+                    data: data
+                }, response.ok && data.success);
+                
+            } catch (error) {
+                addResult('database-result', 'اختبار بيانات قاعدة البيانات', {
+                    error: error.message
+                }, false);
+            }
+            updateSummary();
+        }
+
+        async function testGetRequests() {
+            try {
+                const result = await dbAPI.getAllRequests();
+                
+                addResult('requests-result', 'جلب الطلبات عبر JavaScript', {
+                    success: result.success,
+                    requestCount: result.data ? result.data.length : 0,
+                    message: result.message,
+                    sampleData: result.data ? result.data.slice(0, 2) : null
+                }, result.success);
+                
+            } catch (error) {
+                addResult('requests-result', 'جلب الطلبات عبر JavaScript', {
+                    error: error.message
+                }, false);
+            }
+            updateSummary();
+        }
+
+        async function testCreateRequest() {
+            try {
+                const testRequest = {
+                    user_id: 2,
+                    request_type: 'technical',
+                    subject: 'طلب اختبار الاتصال',
+                    description: 'طلب تجريبي لاختبار الاتصال بقاعدة البيانات',
+                    priority: 'medium'
+                };
+                
+                const url = 'http://localhost/projeect/api/requests.php';
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ action: 'create', ...testRequest })
+                });
+                
+                const data = await response.json();
+                
+                addResult('requests-result', 'إنشاء طلب جديد', {
+                    request: testRequest,
+                    response: data
+                }, response.ok && data.success);
+                
+            } catch (error) {
+                addResult('requests-result', 'إنشاء طلب جديد', {
+                    error: error.message
+                }, false);
+            }
+            updateSummary();
+        }
+
+        async function testGetRatings() {
+            try {
+                const result = await dbAPI.getRatings();
+                
+                addResult('ratings-result', 'جلب التقييمات', {
+                    success: result.success,
+                    ratingCount: result.ratings ? result.ratings.length : 0,
+                    message: result.message,
+                    sampleData: result.ratings ? result.ratings.slice(0, 2) : null
+                }, result.success);
+                
+            } catch (error) {
+                addResult('ratings-result', 'جلب التقييمات', {
+                    error: error.message
+                }, false);
+            }
+            updateSummary();
+        }
+
+        async function testCreateRating() {
+            try {
+                const testRating = {
+                    action: 'rate_request',
+                    request_id: 1,
+                    user_id: 2,
+                    quality_rate: 5,
+                    speed_rate: 4,
+                    comments: 'تقييم تجريبي من اختبار الاتصال'
+                };
+                
+                const url = 'http://localhost/projeect/api/requests.php';
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testRating)
+                });
+                
+                const data = await response.json();
+                
+                addResult('ratings-result', 'إنشاء تقييم جديد', {
+                    rating: testRating,
+                    response: data
+                }, response.ok && data.success);
+                
+            } catch (error) {
+                addResult('ratings-result', 'إنشاء تقييم جديد', {
+                    error: error.message
+                }, false);
+            }
+            updateSummary();
+        }
+
+        async function testJavaScriptAPI() {
+            try {
+                addResult('js-api-result', 'اختبار تهيئة DatabaseAPI', {
+                    baseURL: dbAPI.baseURL,
+                    requestsAPI: dbAPI.requestsAPI,
+                    authAPI: dbAPI.authAPI
+                }, true);
+                
+                // اختبار getStatistics
+                const stats = await dbAPI.getStatistics();
+                addResult('js-api-result', 'اختبار getStatistics', stats, stats.success);
+                
+            } catch (error) {
+                addResult('js-api-result', 'اختبار JavaScript API', {
+                    error: error.message
+                }, false);
+            }
+            updateSummary();
+        }
+
+        async function checkServerStatus() {
+            const services = [
+                { name: 'Apache', url: 'http://localhost/', description: 'خادم الويب' },
+                { name: 'PHP', url: 'http://localhost/projeect/', description: 'معالج PHP' },
+                { name: 'API', url: 'http://localhost/projeect/api/requests.php?action=test', description: 'واجهة برمجة التطبيقات' }
+            ];
+            
+            for (const service of services) {
+                try {
+                    const response = await fetch(service.url);
+                    const status = response.ok ? 'متصل' : 'خطأ';
+                    const statusClass = response.ok ? 'online' : 'offline';
+                    
+                    addResult('basic-result', `حالة ${service.name}`, {
+                        service: service.description,
+                        url: service.url,
+                        status: status,
+                        httpStatus: response.status
+                    }, response.ok);
+                    
+                } catch (error) {
+                    addResult('basic-result', `حالة ${service.name}`, {
+                        service: service.description,
+                        url: service.url,
+                        status: 'غير متصل',
+                        error: error.message
+                    }, false);
+                }
+            }
+            updateSummary();
+        }
+
+        async function testAll() {
+            clearResults();
+            addResult('summary', 'بدء الاختبارات الشاملة', { timestamp: new Date().toLocaleString('ar-SA') });
+            
+            await testBasicConnection();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await checkServerStatus();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testAPIEndpoint();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testAPIStatistics();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testDatabaseConnection();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testDatabaseData();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testGetRequests();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testGetRatings();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testJavaScriptAPI();
+            
+            addResult('summary', 'انتهاء الاختبارات الشاملة', { 
+                timestamp: new Date().toLocaleString('ar-SA'),
+                totalTests: Object.keys(testResults).length
+            });
+        }
+
+        function clearResults() {
+            const resultDivs = document.querySelectorAll('.result');
+            resultDivs.forEach(div => div.innerHTML = '');
+            testResults = {};
+            updateSummary();
+        }
+
+        // تشغيل اختبار أساسي عند تحميل الصفحة
+        window.onload = function() {
+            addResult('summary', 'تحميل صفحة الاختبار', { 
+                timestamp: new Date().toLocaleString('ar-SA'),
+                userAgent: navigator.userAgent,
+                url: window.location.href
+            });
+            updateSummary();
+        };
+    </script>
+</body>
+</html>

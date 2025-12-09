@@ -1,0 +1,2284 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإدارة العامة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Cairo', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(120deg, #eaf2fb 0%, #b6e2d3 60%, #f5f5dc 100%);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+        }
+        body:before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            background: url('https://www.transparenttextures.com/patterns/hexellence.png'),
+                        radial-gradient(circle at 80% 10%, #b6e2d3aa 0%, transparent 60%),
+                        radial-gradient(circle at 10% 80%, #f5f5dcaa 0%, transparent 60%);
+            opacity: 0.25;
+        }
+        body:after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            background: url('https://www.transparenttextures.com/patterns/hexellence.png'),
+                        radial-gradient(circle at 80% 10%, #b6e2d3aa 0%, transparent 60%),
+                        radial-gradient(circle at 10% 80%, #f5f5dcaa 0%, transparent 60%);
+            opacity: 0.4;
+        }
+        .header {
+            background: linear-gradient(90deg, #b6e2d3 60%, #f5f5dc 100%);
+            color: #2d5c8a;
+            padding: 22px 0 16px 0;
+            text-align: center;
+            font-size: 3.2rem;
+            letter-spacing: 2.5px;
+            box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+            border-bottom-left-radius: 60px;
+            border-bottom-right-radius: 60px;
+            font-family: 'Cairo', Arial, sans-serif;
+            font-weight: 900;
+            text-shadow: 2px 4px 18px #2d5c8a33, 0 1px 0 #fff;
+            position: relative;
+            z-index: 2;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #b6e2d3 0%, #3b5e4d 100%);
+            padding: 20px 0;
+            z-index: 1000;
+            box-shadow: -2px 0 24px rgba(59, 94, 77, 0.15);
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+        }
+
+        .sidebar .brand {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 20px;
+            background: rgba(59, 94, 77, 0.2);
+            border-radius: 15px;
+            margin: 10px 15px 20px 15px;
+        }
+
+        .sidebar .brand i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #f5f5dc;
+        }
+
+        .sidebar .brand h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #f5f5dc;
+        }
+
+        .sidebar .nav-item {
+            display: block;
+            padding: 15px 25px;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin: 2px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .sidebar .nav-item:hover,
+        .sidebar .nav-item.active {
+            background: linear-gradient(90deg, #b6e2d3, #f5f5dc);
+            color: #3b5e4d;
+            padding-right: 35px;
+            box-shadow: 0 2px 12px rgba(182, 226, 211, 0.3);
+        }
+
+        .sidebar .nav-item i {
+            width: 25px;
+            margin-left: 15px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-right: 280px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 20px 30px;
+            margin: -30px -30px 30px -30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar h1 {
+            color: #333;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-card:active {
+            transform: translateY(-2px);
+        }
+
+        .stat-card.clickable::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .stat-card.clickable:hover::before {
+            transform: translateX(100%);
+        }
+
+        .stat-card.selected {
+            animation: pulse 0.6s ease-in-out;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .stat-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-card.total .icon { color: #3498db; }
+        .stat-card.pending .icon { color: #f39c12; }
+        .stat-card.progress .icon { color: #e74c3c; }
+        .stat-card.completed .icon { color: #27ae60; }
+        .stat-card.rating .icon { color: #ff6b35; }
+
+        .stat-card .number {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .label {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(90deg, #b6e2d3, #f5f5dc);
+            color: #3b5e4d;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 2px 12px rgba(182, 226, 211, 0.3);
+        }
+
+        .refresh-btn:hover {
+            background: linear-gradient(90deg, #f5f5dc, #b6e2d3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(182, 226, 211, 0.4);
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .orders-table th,
+        .orders-table td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #eee;
+        }
+
+        .orders-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            position: sticky;
+            top: 0;
+        }
+
+        .orders-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .status-pending { background: #fff3cd; color: #d68910; border: 1px solid #f39c12; }
+        .status-progress { background: #fffbf0; color: #b8860b; border: 1px solid #ffd700; }
+        .status-completed { background: #d4edda; color: #155724; border: 1px solid #28a745; }
+        .status-rejected { background: #fadbd8; color: #c0392b; border: 1px solid #e74c3c; }
+
+        .status-select {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-form {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(234, 242, 251, 0.95) 0%, rgba(182, 226, 211, 0.95) 60%, rgba(245, 245, 220, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(59, 94, 77, 0.2);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            border: 2px solid rgba(182, 226, 211, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #b6e2d3 60%, #f5f5dc 100%);
+        }
+
+        .login-card h2 {
+            color: #2d5c8a;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(45, 92, 138, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #3b5e4d;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(182, 226, 211, 0.4);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: rgba(245, 245, 220, 0.1);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #b6e2d3;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(182, 226, 211, 0.2);
+        }
+
+        .login-btn {
+            background: linear-gradient(90deg, #b6e2d3, #f5f5dc);
+            color: #3b5e4d;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(182, 226, 211, 0.3);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(90deg, #f5f5dc, #b6e2d3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(182, 226, 211, 0.4);
+        }
+
+        .error-message {
+            background: linear-gradient(90deg, rgba(231, 76, 60, 0.1), rgba(255, 255, 255, 0.1));
+            color: #c0392b;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 2px solid rgba(231, 76, 60, 0.2);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* تصميم المودال */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(90deg, #b6e2d3 60%, #f5f5dc 100%);
+            color: #3b5e4d;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #3b5e4d;
+            padding: 5px 10px;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .close-btn:hover {
+            background: rgba(59, 94, 77, 0.2);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #b6e2d3, #f5f5dc);
+            color: #3b5e4d;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 2px 12px rgba(182, 226, 211, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #f5f5dc, #b6e2d3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(182, 226, 211, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-1px);
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background: white;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* تحسين تصميم الجدول */
+        .orders-table {
+            font-size: 0.9rem;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(182, 226, 211, 0.2);
+        }
+
+        .orders-table th {
+            background: linear-gradient(90deg, #b6e2d3 60%, #f5f5dc 100%);
+            color: #3b5e4d;
+            font-weight: 700;
+            text-align: center;
+            padding: 15px 10px;
+            border: none;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+        }
+
+        .orders-table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 12px 8px;
+            border-bottom: 1px solid rgba(182, 226, 211, 0.2);
+        }
+
+        .orders-table tr:hover {
+            background: rgba(182, 226, 211, 0.1);
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin: 0 2px;
+            transition: all 0.3s;
+        }
+
+        .edit-btn {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #138496;
+        }
+
+        .view-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .view-btn:hover {
+            background: #218838;
+        }
+
+        .priority-high { background: #dc3545; color: white; }
+        .priority-medium { background: #ffc107; color: #333; }
+        .priority-low { background: #28a745; color: white; }
+        .priority-urgent { background: #6f42c1; color: white; }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* أنماط للعناصر الجديدة */
+        .type-badge {
+            font-weight: 600;
+            text-align: center;
+            border: 1px solid;
+        }
+        .type-technical { background: #e3f2fd; color: #1976d2; border-color: #1976d2; }
+        .type-administrative { background: #f3e5f5; color: #7b1fa2; border-color: #7b1fa2; }
+        .type-financial { background: #e8f5e8; color: #388e3c; border-color: #388e3c; }
+        .type-hr { background: #fff3e0; color: #f57c00; border-color: #f57c00; }
+        .type-maintenance { background: #fce4ec; color: #c2185b; border-color: #c2185b; }
+        .type-other { background: #f5f5f5; color: #666; border-color: #999; }
+
+        .status-badge {
+            font-weight: 600;
+            text-align: center;
+            border: 1px solid;
+        }
+        .status-pending { background: #fff3cd; color: #d68910; border-color: #f39c12; }
+        .status-in_progress { background: #fffbf0; color: #b8860b; border-color: #ffd700; }
+        .status-completed { background: #d4edda; color: #155724; border-color: #28a745; }
+        .status-rejected { background: #fadbd8; color: #c0392b; border-color: #e74c3c; }
+
+        .action-btn {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 6px 10px;
+            margin: 2px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+        .view-btn { color: #007bff; border-color: #007bff; }
+        .view-btn:hover { background: #007bff; color: white; }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .main-content {
+                margin-right: 0;
+            }
+            
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10px;
+            }
+
+            .orders-table {
+                font-size: 0.8rem;
+            }
+
+            .orders-table th,
+            .orders-table td {
+                padding: 8px 4px;
+            }
+        }
+
+        /* ستايلات البطاقات الصغيرة للتقييمات */
+        .stat-mini-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            transition: all 0.3s;
+        }
+
+        .stat-mini-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        .stat-mini-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-mini-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d5c8a;
+            margin-bottom: 5px;
+        }
+
+        .stat-mini-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- نموذج تسجيل الدخول -->
+    <div id="loginForm" class="login-form">
+        <div class="login-card">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <i class="fas fa-user-shield" style="font-size: 3.5rem; color: #2d5c8a; text-shadow: 0 2px 4px rgba(45, 92, 138, 0.3);"></i>
+            </div>
+            <h2>تسجيل دخول الإدارة</h2>
+            <div id="loginError" class="error-message hidden"></div>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="employeeId">رقم الموظف:</label>
+                    <input type="text" id="employeeId" value="admin" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">كلمة المرور:</label>
+                    <input type="password" id="password" value="admin123" required>
+                </div>
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> دخول لوحة التحكم
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- الشريط الجانبي -->
+    <div class="sidebar">
+        <div class="brand">
+            <i class="fas fa-clipboard-list"></i>
+            <h2>إدارة الطلبات</h2>
+        </div>
+        <a href="#dashboard" class="nav-item active" onclick="showSection('dashboard')">
+            <i class="fas fa-tachometer-alt"></i>
+            لوحة التحكم
+        </a>
+        <a href="#orders" class="nav-item" onclick="showSection('orders')">
+            <i class="fas fa-clipboard-list"></i>
+            إدارة الطلبات
+        </a>
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            الصفحة الرئيسية
+        </a>
+        <a href="#logout" class="nav-item" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            تسجيل الخروج
+        </a>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+        <!-- الشريط العلوي -->
+        <div class="top-bar">
+            <h1 id="pageTitle">لوحة التحكم</h1>
+            <div class="user-info">
+                <span id="currentDateTime"></span>
+                <span>مرحباً، <strong id="userName">الإدارة</strong></span>
+            </div>
+        </div>
+
+        <!-- قسم Dashboard -->
+        <div id="dashboard-section">
+            <!-- بطاقات الإحصائيات -->
+            <div class="stats-grid">
+                <div class="stat-card total">
+                    <div class="icon"><i class="fas fa-clipboard-list"></i></div>
+                    <div class="number" id="totalRequests">0</div>
+                    <div class="label">إجمالي الطلبات</div>
+                </div>
+                <div class="stat-card pending clickable" onclick="navigateToOrders('pending')" title="انقر لعرض الطلبات قيد الانتظار">
+                    <div class="icon"><i class="fas fa-clock"></i></div>
+                    <div class="number" id="pendingRequests">0</div>
+                    <div class="label">قيد الانتظار</div>
+                </div>
+                <div class="stat-card progress clickable" onclick="navigateToOrders('in_progress')" title="انقر لعرض الطلبات قيد التنفيذ">
+                    <div class="icon"><i class="fas fa-cogs"></i></div>
+                    <div class="number" id="inProgressRequests">0</div>
+                    <div class="label">قيد التنفيذ</div>
+                </div>
+                <div class="stat-card completed clickable" onclick="navigateToOrders('completed')" title="انقر لعرض الطلبات المكتملة">
+                    <div class="icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="number" id="completedRequests">0</div>
+                    <div class="label">تم التنفيذ</div>
+                </div>
+                <div class="stat-card rating clickable" onclick="showAllRatings()" title="انقر لعرض جميع التقييمات">
+                    <div class="icon"><i class="fas fa-star"></i></div>
+                    <div class="number" id="averageRating">0.0</div>
+                    <div class="label">متوسط التقييم</div>
+                </div>
+            </div>
+
+            <!-- المخططات البيانية -->
+            <div class="charts-container">
+                <div class="chart-card">
+                    <h3 class="chart-title">نسبة الطلبات</h3>
+                    <canvas id="pieChart" width="300" height="200"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">عدد الطلبات الشهرية</h3>
+                    <canvas id="lineChart" width="300" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- الطلبات الحديثة -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">الطلبات الحديثة</h2>
+                    <button class="refresh-btn" onclick="refreshData()">
+                        <i class="fas fa-sync-alt"></i> تحديث
+                    </button>
+                </div>
+                
+                <table class="orders-table" id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>الموضوع</th>
+                            <th>العميل</th>
+                            <th>نوع الطلب</th>
+                            <th>الأولوية</th>
+                            <th>الحالة</th>
+                            <th>تاريخ الطلب</th>
+                            <th>المدة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- سيتم ملؤها عبر JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- آخر التقييمات -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">آخر التقييمات</h2>
+                    <button class="refresh-btn" onclick="loadLatestRatings()">
+                        <i class="fas fa-sync-alt"></i> تحديث
+                    </button>
+                </div>
+                
+                <table class="orders-table" id="ratingsTable">
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>الموضوع</th>
+                            <th>اسم العميل</th>
+                            <th>تقييم الجودة</th>
+                            <th>تقييم السرعة</th>
+                            <th>التاريخ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ratingsTableBody">
+                        <!-- سيتم ملؤها عبر JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- أقسام أخرى (مخفية بشكل افتراضي) -->
+        <div id="customers-section" class="hidden">
+            <div class="content-section">
+                <h2 class="section-title">إدارة العملاء</h2>
+                <p>قسم إدارة العملاء قيد التطوير...</p>
+            </div>
+        </div>
+
+        <!-- قسم عرض جميع التقييمات -->
+        <div id="all-ratings-section" class="hidden">
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">جميع التقييمات</h2>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <select id="ratingFilter" onchange="filterRatings()" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+                            <option value="">جميع التقييمات</option>
+                            <option value="5">5 نجوم</option>
+                            <option value="4">4 نجوم فما فوق</option>
+                            <option value="3">3 نجوم فما فوق</option>
+                            <option value="2">2 نجوم فما فوق</option>
+                            <option value="1">1 نجمة فما فوق</option>
+                        </select>
+                        <button class="refresh-btn" onclick="loadAllRatings()">
+                            <i class="fas fa-sync-alt"></i> تحديث
+                        </button>
+                        <button class="refresh-btn" onclick="goBackToDashboard()">
+                            <i class="fas fa-arrow-right"></i> العودة للوحة التحكم
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="ratingsStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                    <div class="stat-mini-card">
+                        <div class="stat-mini-icon"><i class="fas fa-star" style="color: #ffd700;"></i></div>
+                        <div class="stat-mini-number" id="totalRatingsCount">0</div>
+                        <div class="stat-mini-label">إجمالي التقييمات</div>
+                    </div>
+                    <div class="stat-mini-card">
+                        <div class="stat-mini-icon"><i class="fas fa-gem" style="color: #FF6B35;"></i></div>
+                        <div class="stat-mini-number" id="avgQualityRating">0.0</div>
+                        <div class="stat-mini-label">متوسط تقييم الجودة</div>
+                    </div>
+                    <div class="stat-mini-card">
+                        <div class="stat-mini-icon"><i class="fas fa-tachometer-alt" style="color: #4ECDC4;"></i></div>
+                        <div class="stat-mini-number" id="avgSpeedRating">0.0</div>
+                        <div class="stat-mini-label">متوسط تقييم السرعة</div>
+                    </div>
+                    <div class="stat-mini-card">
+                        <div class="stat-mini-icon"><i class="fas fa-chart-line" style="color: #28a745;"></i></div>
+                        <div class="stat-mini-number" id="overallAvgRating">0.0</div>
+                        <div class="stat-mini-label">المتوسط العام</div>
+                    </div>
+                </div>
+                
+                <table class="orders-table" id="allRatingsTable">
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>اسم العميل</th>
+                            <th>الموضوع</th>
+                            <th>تقييم الجودة</th>
+                            <th>تقييم السرعة</th>
+                            <th>متوسط التقييم</th>
+                            <th>التاريخ</th>
+                            <th>التعليق</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allRatingsTableBody">
+                        <!-- سيتم ملؤها عبر JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="orders-section" class="hidden">
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">إدارة جميع الطلبات</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <select id="statusFilter" onchange="filterOrders()" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+                            <option value="">جميع الحالات</option>
+                            <option value="pending">قيد الانتظار</option>
+                            <option value="in_progress">قيد التنفيذ</option>
+                            <option value="completed">تم التنفيذ</option>
+                            <option value="rejected">لم يتم التنفيذ</option>
+                        </select>
+                        <button class="refresh-btn" onclick="loadAllOrders()">
+                            <i class="fas fa-sync-alt"></i> تحديث
+                        </button>
+                    </div>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table class="orders-table" id="allOrdersTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>اسم الطلب</th>
+                                <th>العميل</th>
+                                <th>النوع</th>
+                                <th>الأولوية</th>
+                                <th>الحالة</th>
+                                <th>السبب/الملاحظات</th>
+                                <th>تاريخ الإنشاء</th>
+                                <th>المدة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allOrdersTableBody">
+                            <!-- سيتم ملؤها عبر JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- مودال تعديل الطلب -->
+        <div id="editOrderModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>تعديل حالة الطلب</h3>
+                    <span class="close-btn" onclick="closeEditModal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editOrderId">
+                    <div class="form-group">
+                        <label>اسم الطلب:</label>
+                        <input type="text" id="editOrderName" readonly style="background: #f8f9fa;">
+                    </div>
+                    <div class="form-group">
+                        <label>تغيير الحالة:</label>
+                        <select id="editOrderStatus" onchange="toggleReasonField()">
+                            <option value="pending">قيد الانتظار</option>
+                            <option value="in_progress">قيد التنفيذ</option>
+                            <option value="completed">تم التنفيذ</option>
+                            <option value="rejected">لم يتم التنفيذ</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="reasonGroup">
+                        <label>السبب/الملاحظات:</label>
+                        <textarea id="editOrderReason" rows="3" placeholder="اكتب السبب أو الملاحظات هنا..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeEditModal()">إلغاء</button>
+                    <button type="button" class="btn-primary" onclick="saveOrderChanges()">حفظ التغييرات</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- تضمين ملف API -->
+    <script src="js/database_new.js"></script>
+    
+    <script>
+        let currentUser = null;
+        let requestsData = [];
+        let pieChart, lineChart;
+
+        // إعداد الصفحة عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            setupLoginForm();
+            
+            // تحديث الإحصائيات عند تحميل الصفحة
+            setTimeout(() => {
+                updateDashboardStats();
+            }, 1000);
+        });
+
+        // تحديث التاريخ والوقت
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('currentDateTime').textContent = 
+                now.toLocaleString('ar-SA', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+        }
+
+        // إعداد نموذج تسجيل الدخول
+        function setupLoginForm() {
+            const form = document.getElementById('adminLoginForm');
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const employeeId = document.getElementById('employeeId').value.trim();
+                const password = document.getElementById('password').value.trim();
+                
+                if (!employeeId || !password) {
+                    showError('جميع الحقول مطلوبة');
+                    return;
+                }
+                
+                try {
+                    console.log('🔄 محاولة تسجيل الدخول...');
+                    
+                    // قائمة أسماء المستخدمين المسموح لهم
+                    const allowedUsers = {
+                        'admin': { password: 'admin123', name: 'مدير النظام', role: 'admin' },
+                        '1001': { password: 'admin123', name: 'مدير النظام', role: 'admin' },
+                        'manager': { password: '123456', name: 'مدير العمليات', role: 'manager' },
+                        'user': { password: '123', name: 'موظف', role: 'user' },
+                        'test': { password: 'test', name: 'مستخدم تجريبي', role: 'admin' }
+                    };
+                    
+                    // التحقق من بيانات المستخدم محلياً
+                    const user = allowedUsers[employeeId.toLowerCase()];
+                    
+                    if (user && user.password === password) {
+                        // نجح تسجيل الدخول
+                        currentUser = {
+                            id: employeeId,
+                            username: employeeId,
+                            full_name: user.name,
+                            role: user.role
+                        };
+                        
+                        document.getElementById('userName').textContent = user.name;
+                        document.getElementById('loginForm').classList.add('hidden');
+                        document.getElementById('adminDashboard').classList.remove('hidden');
+                        
+                        showSuccess(`مرحباً ${user.name}! تم تسجيل الدخول بنجاح`);
+                        
+                        // تحميل البيانات
+                        await loadDashboardData();
+                        
+                    } else {
+                        // محاولة تسجيل الدخول عبر API
+                        try {
+                            const result = await dbAPI.login(employeeId, password);
+                            
+                            if (result.success) {
+                                currentUser = result.user;
+                                document.getElementById('userName').textContent = result.user.full_name;
+                                document.getElementById('loginForm').classList.add('hidden');
+                                document.getElementById('adminDashboard').classList.remove('hidden');
+                                await loadDashboardData();
+                                showSuccess('تم تسجيل الدخول بنجاح');
+                            } else {
+                                showError('اسم المستخدم أو كلمة المرور غير صحيحة');
+                            }
+                        } catch (apiError) {
+                            console.log('API غير متاح، استخدام التحقق المحلي فقط');
+                            showError('اسم المستخدم أو كلمة المرور غير صحيحة');
+                        }
+                    }
+                } catch (error) {
+                    console.error('خطأ في تسجيل الدخول:', error);
+                    showError('خطأ في الاتصال بالخادم');
+                }
+            });
+        }
+
+        // عرض رسالة خطأ
+        function showError(message) {
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            setTimeout(() => errorDiv.classList.add('hidden'), 5000);
+        }
+
+        function showSuccess(message) {
+            // إنشاء عنصر للرسالة الناجحة
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(90deg, #27ae60, #2ecc71);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+                z-index: 9999;
+                font-weight: 600;
+                animation: slideIn 0.3s ease-out;
+            `;
+            successDiv.textContent = message;
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => document.body.removeChild(successDiv), 300);
+            }, 3000);
+        }
+
+        // تحميل بيانات Dashboard
+        async function loadDashboardData() {
+            console.log('📊 تحميل بيانات Dashboard...');
+            
+            try {
+                // تحميل الإحصائيات
+                const stats = await dbAPI.getStatistics();
+                console.log('📈 الإحصائيات:', stats);
+                
+                if (stats.success) {
+                    updateStatCards(stats.data);
+                    await loadRequestsTable();
+                    createCharts(stats.data);
+                } else {
+                    console.error('فشل في تحميل الإحصائيات:', stats.message);
+                }
+            } catch (error) {
+                console.error('خطأ في تحميل البيانات:', error);
+            }
+        }
+
+        // تحديث بطاقات الإحصائيات
+        function updateStatCards(data) {
+            const requests = data.requests || {};
+            const ratings = data.ratings || {};
+            
+            // تحديث الأرقام الصحيحة
+            document.getElementById('totalRequests').textContent = requests.total_requests || 0;
+            document.getElementById('pendingRequests').textContent = requests.pending_requests || 0;
+            document.getElementById('inProgressRequests').textContent = requests.in_progress_requests || 0;
+            document.getElementById('completedRequests').textContent = requests.completed_requests || 0;
+            
+            // حساب متوسط التقييم
+            const avgQuality = parseFloat(ratings.avg_quality || 0);
+            const avgSpeed = parseFloat(ratings.avg_speed || 0);
+            const avgRating = ratings.total_ratings > 0 ? ((avgQuality + avgSpeed) / 2).toFixed(1) : '0.0';
+            document.getElementById('averageRating').textContent = avgRating;
+            
+            console.log('📊 تم تحديث بطاقات الإحصائيات:', {
+                total: requests.total_requests,
+                pending: requests.pending_requests,
+                inProgress: requests.in_progress_requests,
+                completed: requests.completed_requests,
+                rating: avgRating
+            });
+        }
+
+        // تحميل جدول الطلبات
+        async function loadRequestsTable() {
+            try {
+                const result = await dbAPI.getAllRequests();
+                
+                if (result.success && result.data) {
+                    requestsData = result.data;
+                    displayOrdersTable(result.data.slice(0, 10)); // عرض أول 10 طلبات
+                }
+            } catch (error) {
+                console.error('خطأ في تحميل الطلبات:', error);
+            }
+        }
+
+        // عرض جدول الطلبات
+        function displayOrdersTable(orders) {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '';
+            
+            if (!orders || orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 20px; color: #666;">لا توجد طلبات</td></tr>';
+                return;
+            }
+            
+            orders.slice(0, 10).forEach(order => { // عرض أحدث 10 طلبات فقط
+                const row = document.createElement('tr');
+                
+                // حساب المدة المحسنة
+                let durationHtml = '';
+                if (order.duration_info) {
+                    // إذا كانت المدة محسوبة من الخادم
+                    durationHtml = order.duration_info.colored_html || order.duration_info.html;
+                } else {
+                    // حساب المدة في JavaScript كاحتياطي
+                    const createdTime = new Date(order.created_at);
+                    let endTime;
+                    
+                    if (order.status === 'completed' && order.updated_at) {
+                        endTime = new Date(order.updated_at);
+                    } else {
+                        endTime = new Date();
+                    }
+                    
+                    const diffTime = Math.abs(endTime - createdTime);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    let durationText = '';
+                    if (diffDays === 0) {
+                        durationText = 'اليوم';
+                    } else if (diffDays === 1) {
+                        durationText = 'يوم واحد';
+                    } else if (diffDays === 2) {
+                        durationText = 'يومان';
+                    } else if (diffDays >= 3 && diffDays <= 10) {
+                        durationText = diffDays + ' أيام';
+                    } else {
+                        durationText = diffDays + ' يوم';
+                    }
+                    
+                    // تحديد اللون حسب الحالة والمدة
+                    let color = '#666';
+                    if (order.status === 'completed') {
+                        if (diffDays <= 3) color = '#27ae60';
+                        else if (diffDays <= 7) color = '#f39c12';
+                        else color = '#e74c3c';
+                    } else {
+                        if (diffDays <= 7) color = '#3498db';
+                        else if (diffDays <= 14) color = '#f39c12';
+                        else color = '#e74c3c';
+                    }
+                    
+                    durationHtml = `<span style="color: ${color}; font-weight: bold;"><i class="fa fa-clock" style="margin-left: 5px;"></i> ${durationText}</span>`;
+                }
+                
+                row.innerHTML = `
+                    <td><strong>#${order.id}</strong></td>
+                    <td style="max-width: 200px; word-wrap: break-word;">${order.subject || 'طلب خدمة'}</td>
+                    <td style="color: #2c5aa0; font-weight: bold; max-width: 150px;">${order.display_name || order.customer_name || order.user_name || order.full_name || order.username || 'غير محدد'}</td>
+                    <td>
+                        <span class="type-badge type-${order.request_type || 'other'}" style="padding: 4px 8px; border-radius: 12px; font-size: 0.8rem;">
+                            ${getRequestTypeText(order.request_type)}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="priority-${order.priority}" style="padding: 4px 8px; border-radius: 12px; font-size: 0.8rem;">
+                            ${getPriorityText(order.priority)}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge status-${order.status}" style="padding: 6px 12px; border-radius: 15px; font-size: 0.85rem;">
+                            ${getStatusText(order.status)}
+                        </span>
+                    </td>
+                    <td style="font-size: 0.85rem;">
+                        ${new Date(order.created_at).toLocaleDateString('ar-SA', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        })}
+                    </td>
+                    <td style="font-size: 0.85rem; text-align: center;">
+                        ${durationHtml}
+                    </td>
+                    <td>
+                        <button class="action-btn view-btn" onclick="viewOrderDetails(${order.id})" title="عرض التفاصيل">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // إنشاء المخططات البيانية
+        function createCharts(data) {
+            const requests = data.requests || {};
+            
+            // مخطط دائري للطلبات
+            const pieCtx = document.getElementById('pieChart').getContext('2d');
+            if (pieChart) pieChart.destroy();
+            
+            pieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['تم التنفيذ', 'قيد التنفيذ', 'قيد الانتظار'],
+                    datasets: [{
+                        data: [
+                            requests.completed_requests || 0,
+                            requests.in_progress_requests || 0,
+                            requests.pending_requests || 0
+                        ],
+                        backgroundColor: ['#27ae60', '#ffeb3b', '#e74c3c'],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // مخطط خطي للطلبات الشهرية
+            const lineCtx = document.getElementById('lineChart').getContext('2d');
+            if (lineChart) lineChart.destroy();
+            
+            lineChart = new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+                    datasets: [{
+                        label: 'عدد الطلبات',
+                        data: [65, 59, 80, 81, 56, 55],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // تحديث حالة الطلب
+        async function updateRequestStatus(requestId, newStatus) {
+            try {
+                const result = await dbAPI.updateRequestStatus(requestId, newStatus);
+                
+                if (result.success) {
+                    console.log('✅ تم تحديث الحالة بنجاح');
+                    await refreshData();
+                } else {
+                    console.error('فشل في تحديث الحالة:', result.message);
+                    alert('فشل في تحديث الحالة');
+                }
+            } catch (error) {
+                console.error('خطأ في تحديث الحالة:', error);
+                alert('خطأ في تحديث الحالة');
+            }
+        }
+
+        // عرض تفاصيل الطلب
+        function viewOrderDetails(orderId) {
+            const order = requestsData.find(r => r.id === orderId);
+            if (order) {
+                alert(`تفاصيل الطلب #${orderId}:\n\nالموضوع: ${order.subject}\nالوصف: ${order.description}\nالحالة: ${order.status}\nالأولوية: ${order.priority}`);
+            }
+        }
+
+        // تحديث البيانات
+        async function refreshData() {
+            console.log('🔄 تحديث البيانات...');
+            await loadDashboardData();
+            await updateDashboardStats();
+            if (document.getElementById('orders-section').classList.contains('hidden') === false) {
+                await loadAllOrders();
+            }
+        }
+
+        // تحديث إحصائيات لوحة التحكم
+        async function updateDashboardStats() {
+            try {
+                console.log('📊 تحديث إحصائيات لوحة التحكم...');
+                
+                // جلب الإحصائيات من API
+                const statsResult = await dbAPI.getStatistics();
+                console.log('📈 نتيجة الإحصائيات:', statsResult);
+                
+                if (statsResult.success && statsResult.data) {
+                    const stats = statsResult.data;
+                    
+                    // تحديث إحصائيات الطلبات
+                    if (stats.requests) {
+                        document.getElementById('totalRequests').textContent = stats.requests.total_requests || 0;
+                        document.getElementById('pendingRequests').textContent = stats.requests.pending_requests || 0;
+                        document.getElementById('inProgressRequests').textContent = stats.requests.in_progress_requests || 0;
+                        document.getElementById('completedRequests').textContent = stats.requests.completed_requests || 0;
+                    }
+                    
+                    // تحديث إحصائيات التقييمات
+                    if (stats.ratings) {
+                        const avgQuality = parseFloat(stats.ratings.avg_quality || 0).toFixed(1);
+                        const avgSpeed = parseFloat(stats.ratings.avg_speed || 0).toFixed(1);
+                        const totalRatings = stats.ratings.total_ratings || 0;
+                        
+                        // تحديث متوسط التقييم (نحسب متوسط الجودة والسرعة)
+                        const avgRating = totalRatings > 0 ? ((parseFloat(avgQuality) + parseFloat(avgSpeed)) / 2).toFixed(1) : '0.0';
+                        document.getElementById('averageRating').textContent = avgRating;
+                        
+                        console.log(`📊 التقييمات - الجودة: ${avgQuality}, السرعة: ${avgSpeed}, المتوسط: ${avgRating}`);
+                    }
+                    
+                    // تحديث الرسوم البيانية
+                    updatePieChart(stats.requests);
+                    updateLineChart(stats.monthly || []);
+                    
+                    // جلب وعرض آخر التقييمات
+                    loadLatestRatings();
+                    
+                } else {
+                    console.error('خطأ في جلب الإحصائيات:', statsResult.message);
+                    // عرض قيم افتراضية في حالة الخطأ
+                    document.getElementById('totalRequests').textContent = '0';
+                    document.getElementById('pendingRequests').textContent = '0';
+                    document.getElementById('inProgressRequests').textContent = '0';
+                    document.getElementById('completedRequests').textContent = '0';
+                    document.getElementById('averageRating').textContent = '0.0';
+                }
+                
+            } catch (error) {
+                console.error('❌ خطأ في تحديث الإحصائيات:', error);
+            }
+        }
+
+        // تحميل جميع الطلبات
+        async function loadAllOrders() {
+            try {
+                console.log('📋 تحميل جميع الطلبات...');
+                const result = await dbAPI.getAllRequests();
+                
+                if (result.success && result.data) {
+                    requestsData = result.data;
+                    displayAllOrdersTable(result.data);
+                } else {
+                    console.error('فشل في تحميل الطلبات:', result.message);
+                }
+            } catch (error) {
+                console.error('خطأ في تحميل الطلبات:', error);
+            }
+        }
+
+        // عرض جدول جميع الطلبات
+        function displayAllOrdersTable(orders) {
+            const tbody = document.getElementById('allOrdersTableBody');
+            tbody.innerHTML = '';
+            
+            console.log('📋 البيانات المستلمة:', orders); // للتحقق من البيانات
+            
+            if (!orders || orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 20px; color: #666;">لا توجد طلبات</td></tr>';
+                return;
+            }
+            
+            orders.forEach((order, index) => {
+                console.log(`📄 الطلب ${index + 1}:`, order); // للتحقق من كل طلب
+                
+                // حساب المدة المحسنة
+                let durationHtml = '';
+                if (order.duration_info) {
+                    // إذا كانت المدة محسوبة من الخادم
+                    durationHtml = order.duration_info.colored_html || order.duration_info.html;
+                } else {
+                    // حساب المدة في JavaScript كاحتياطي
+                    const createdTime = new Date(order.created_at);
+                    let endTime;
+                    
+                    if (order.status === 'completed' && order.updated_at) {
+                        endTime = new Date(order.updated_at);
+                    } else {
+                        endTime = new Date();
+                    }
+                    
+                    const diffTime = Math.abs(endTime - createdTime);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    let durationText = '';
+                    if (diffDays === 0) {
+                        durationText = 'اليوم';
+                    } else if (diffDays === 1) {
+                        durationText = 'يوم واحد';
+                    } else if (diffDays === 2) {
+                        durationText = 'يومان';
+                    } else if (diffDays >= 3 && diffDays <= 10) {
+                        durationText = diffDays + ' أيام';
+                    } else {
+                        durationText = diffDays + ' يوم';
+                    }
+                    
+                    // تحديد اللون حسب الحالة والمدة
+                    let color = '#666';
+                    if (order.status === 'completed') {
+                        if (diffDays <= 3) color = '#27ae60';
+                        else if (diffDays <= 7) color = '#f39c12';
+                        else color = '#e74c3c';
+                    } else {
+                        if (diffDays <= 7) color = '#3498db';
+                        else if (diffDays <= 14) color = '#f39c12';
+                        else color = '#e74c3c';
+                    }
+                    
+                    durationHtml = `<span style="color: ${color}; font-weight: bold;"><i class="fa fa-clock" style="margin-left: 5px;"></i> ${durationText}</span>`;
+                }
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>#${order.id}</strong></td>
+                    <td style="text-align: right; font-weight: 600;">${order.subject || 'طلب خدمة'}</td>
+                    <td style="color: #2c5aa0; font-weight: bold;">${order.display_name || order.customer_name || order.user_name || order.full_name || order.username || 'غير محدد'}</td>
+                    <td>
+                        <span class="status-badge status-${order.request_type || 'general'}" style="padding: 4px 8px; border-radius: 12px; font-size: 0.8rem;">
+                            ${getRequestTypeText(order.request_type)}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="priority-${order.priority}" style="padding: 4px 8px; border-radius: 12px; font-size: 0.8rem;">
+                            ${getPriorityText(order.priority)}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge status-${order.status}" style="padding: 6px 12px; border-radius: 15px; font-size: 0.85rem;">
+                            ${getStatusText(order.status)}
+                        </span>
+                    </td>
+                    <td style="max-width: 150px; text-align: right;">
+                        <div style="max-height: 40px; overflow: hidden; font-size: 0.85rem; color: #666;">
+                            ${order.admin_notes || order.description?.substring(0, 50) + '...' || '-'}
+                        </div>
+                    </td>
+                    <td style="font-size: 0.85rem;">
+                        ${new Date(order.created_at).toLocaleDateString('ar-SA', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        })}
+                    </td>
+                    <td style="font-size: 0.85rem; text-align: center;">
+                        ${durationHtml}
+                    </td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="openEditModal(${order.id})" title="تعديل">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn view-btn" onclick="viewOrderDetails(${order.id})" title="عرض">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // فتح مودال التعديل
+        function openEditModal(orderId) {
+            const order = requestsData.find(r => r.id === orderId);
+            if (!order) return;
+            
+            document.getElementById('editOrderId').value = order.id;
+            document.getElementById('editOrderName').value = order.subject;
+            document.getElementById('editOrderStatus').value = order.status;
+            document.getElementById('editOrderReason').value = order.admin_notes || '';
+            
+            toggleReasonField();
+            document.getElementById('editOrderModal').classList.remove('hidden');
+        }
+
+        // إغلاق مودال التعديل
+        function closeEditModal() {
+            document.getElementById('editOrderModal').classList.add('hidden');
+        }
+
+        // إظهار/إخفاء حقل السبب
+        function toggleReasonField() {
+            const status = document.getElementById('editOrderStatus').value;
+            const reasonGroup = document.getElementById('reasonGroup');
+            const reasonField = document.getElementById('editOrderReason');
+            
+            if (status === 'rejected' || status === 'completed') {
+                reasonGroup.style.display = 'block';
+                reasonField.required = status === 'rejected';
+                reasonField.placeholder = status === 'rejected' ? 
+                    'يرجى كتابة سبب الرفض...' : 
+                    'ملاحظات إضافية (اختياري)...';
+            } else {
+                reasonGroup.style.display = 'block'; // إظهار دائماً للملاحظات
+                reasonField.required = false;
+                reasonField.placeholder = 'ملاحظات أو تفاصيل إضافية...';
+            }
+        }
+
+        // حفظ تغييرات الطلب
+        async function saveOrderChanges() {
+            const orderId = document.getElementById('editOrderId').value;
+            const newStatus = document.getElementById('editOrderStatus').value;
+            const reason = document.getElementById('editOrderReason').value.trim();
+            
+            if ((newStatus === 'rejected' || newStatus === 'completed') && !reason) {
+                alert('يرجى كتابة السبب أو الملاحظات');
+                return;
+            }
+            
+            try {
+                console.log('💾 حفظ تغييرات الطلب...');
+                const result = await dbAPI.updateRequestStatus(orderId, newStatus, reason);
+                
+                if (result.success) {
+                    console.log('✅ تم تحديث الطلب بنجاح');
+                    closeEditModal();
+                    await loadAllOrders(); // إعادة تحميل الجدول
+                    await refreshData(); // تحديث الإحصائيات
+                    
+                    // إظهار رسالة نجاح
+                    showSuccessMessage('تم تحديث حالة الطلب بنجاح');
+                } else {
+                    console.error('فشل في تحديث الطلب:', result.message);
+                    alert('فشل في تحديث الطلب: ' + result.message);
+                }
+            } catch (error) {
+                console.error('خطأ في تحديث الطلب:', error);
+                alert('خطأ في تحديث الطلب');
+            }
+        }
+
+        // فلترة الطلبات
+        function filterOrders() {
+            const filterValue = document.getElementById('statusFilter').value;
+            const filteredData = filterValue ? 
+                requestsData.filter(order => order.status === filterValue) : 
+                requestsData;
+            
+            displayAllOrdersTable(filteredData);
+        }
+
+        // الانتقال إلى صفحة الطلبات مع الفلترة
+        function navigateToOrders(status) {
+            // إضافة تأثير بصري للبطاقة
+            highlightSelectedCard(status);
+            
+            // التأخير قليلاً لإظهار التأثير ثم الانتقال
+            setTimeout(() => {
+                window.location.href = `orders.php?status=${status}`;
+            }, 300);
+        }
+
+        // فلترة الطلبات عند النقر على بطاقات الإحصائيات (للاستخدام المحلي)
+        function filterByStatus(status) {
+            // تحديث قائمة الفلترة
+            const statusFilter = document.getElementById('statusFilter');
+            if (statusFilter) {
+                statusFilter.value = status;
+            }
+            
+            // فلترة البيانات
+            const filteredData = requestsData.filter(order => order.status === status);
+            displayAllOrdersTable(filteredData);
+            
+            // التمرير إلى قسم الطلبات
+            const ordersSection = document.getElementById('orders-section');
+            if (ordersSection) {
+                ordersSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+            
+            // إضافة تأثير بصري للبطاقة المحددة
+            highlightSelectedCard(status);
+            
+            // تحديث عنوان القسم
+            updateSectionTitle(status);
+        }
+
+        // إبراز البطاقة المحددة
+        function highlightSelectedCard(status) {
+            // إزالة التمييز من جميع البطاقات
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // إضافة التمييز للبطاقة المحددة
+            const selectedCard = document.querySelector(`.stat-card.${status === 'in_progress' ? 'progress' : status}`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+                
+                // إزالة التمييز بعد ثانيتين
+                setTimeout(() => {
+                    selectedCard.classList.remove('selected');
+                }, 2000);
+            }
+        }
+
+        // تحديث عنوان القسم
+        function updateSectionTitle(status) {
+            const statusNames = {
+                'pending': 'الطلبات قيد الانتظار',
+                'in_progress': 'الطلبات قيد التنفيذ', 
+                'completed': 'الطلبات المكتملة',
+                'rejected': 'الطلبات المرفوضة'
+            };
+            
+            const sectionTitle = document.querySelector('#orders-section .section-title');
+            if (sectionTitle) {
+                const originalTitle = sectionTitle.dataset.originalTitle || sectionTitle.textContent;
+                if (!sectionTitle.dataset.originalTitle) {
+                    sectionTitle.dataset.originalTitle = originalTitle;
+                }
+                
+                sectionTitle.textContent = statusNames[status] || originalTitle;
+                
+                // استعادة العنوان الأصلي بعد 5 ثوانٍ
+                setTimeout(() => {
+                    sectionTitle.textContent = originalTitle;
+                }, 5000);
+            }
+        }
+
+        // الحصول على نص نوع الطلب
+        function getRequestTypeText(type) {
+            const types = {
+                'electricity': 'كهرباء ⚡',
+                'plumbing': 'سباكة 🚰', 
+                'ac': 'تكييف ❄️',
+                'it': 'تقنية معلومات 💻',
+                'maintenance': 'صيانة عامة 🔧',
+                'cleaning': 'تنظيف 🧽',
+                'security': 'أمن وسلامة 🛡️',
+                'transportation': 'نقل ومواصلات 🚗',
+                'supplies': 'مستلزمات 📦',
+                'other': 'أخرى ❓',
+                'repair': 'إصلاح 🔨',
+                'replacement': 'استبدال 🔄',
+                'return': 'إرجاع ↩️',
+                'exchange': 'تبديل 🔁',
+                'general': 'عام 📋',
+                'technical': 'تقني 🔧',
+                'administrative': 'إداري 📊',
+                'financial': 'مالي 💰',
+                'hr': 'موارد بشرية 👥'
+            };
+            
+            // إذا كان النوع فارغ أو غير محدد
+            if (!type || type === null || type === undefined || type === '') {
+                return '❓ غير محدد';
+            }
+            
+            // إذا كان النوع موجود في القاموس
+            if (types[type]) {
+                return types[type];
+            }
+            
+            // إذا كان النوع باللغة العربية أصلاً
+            if (type.length > 0 && /[\u0600-\u06FF]/.test(type)) {
+                return type;
+            }
+            
+            // حالة افتراضية
+            return type || '📋 عام';
+        }
+
+        // الحصول على نص الأولوية
+        function getPriorityText(priority) {
+            const priorities = {
+                'low': 'منخفض',
+                'medium': 'متوسط',
+                'high': 'عالي',
+                'urgent': 'عاجل'
+            };
+            
+            // إذا كانت الأولوية فارغة أو غير محددة
+            if (!priority || priority === null || priority === undefined) {
+                return 'متوسط';
+            }
+            
+            return priorities[priority] || priority || 'متوسط';
+        }
+
+        // الحصول على نص الحالة
+        function getStatusText(status) {
+            const statuses = {
+                'pending': 'قيد الانتظار',
+                'in_progress': 'قيد التنفيذ',
+                'completed': 'تم التنفيذ',
+                'rejected': 'لم يتم التنفيذ'
+            };
+            return statuses[status] || status || 'قيد الانتظار';
+        }
+
+        // إظهار رسالة نجاح
+        function showSuccessMessage(message) {
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #d4edda;
+                color: #155724;
+                padding: 15px 20px;
+                border-radius: 8px;
+                border: 1px solid #c3e6cb;
+                z-index: 9999;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                font-weight: 600;
+            `;
+            successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+
+        // التنقل بين الأقسام
+        function showSection(sectionName) {
+            // إخفاء جميع الأقسام
+            document.querySelectorAll('[id$="-section"]').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // إزالة active من جميع العناصر
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // إظهار القسم المطلوب
+            const targetSection = document.getElementById(sectionName + '-section');
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                
+                // تحديد الأسماء بالعربية
+                const sectionNames = {
+                    'dashboard': 'لوحة التحكم',
+                    'orders': 'إدارة الطلبات'
+                };
+                
+                document.getElementById('pageTitle').textContent = sectionNames[sectionName] || sectionName;
+                
+                // إضافة active للعنصر المحدد
+                event.target.classList.add('active');
+                
+                // تحميل البيانات حسب القسم
+                if (sectionName === 'orders') {
+                    loadAllOrders();
+                }
+            }
+        }
+
+        // تسجيل الخروج
+        function logout() {
+            if (confirm('هل تريد تسجيل الخروج؟')) {
+                currentUser = null;
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('employeeId').value = '1001';
+                document.getElementById('password').value = 'admin123';
+                document.getElementById('adminDashboard').classList.add('hidden');
+            }
+        }
+
+        // تحديث الرسم البياني الدائري
+        function updatePieChart(requestsStats) {
+            const ctx = document.getElementById('pieChart');
+            if (!ctx) return;
+            
+            if (pieChart) {
+                pieChart.destroy();
+            }
+            
+            const data = {
+                labels: ['متكملة', 'قيد التنفيذ', 'قيد الانتظار', 'لم يتم التنفيذ'],
+                datasets: [{
+                    data: [
+                        requestsStats?.completed_requests || 0,
+                        requestsStats?.in_progress_requests || 0,
+                        requestsStats?.pending_requests || 0,
+                        requestsStats?.rejected_requests || 0
+                    ],
+                    backgroundColor: ['#4CAF50', '#ffeb3b', '#FF9800', '#F44336'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            };
+            
+            pieChart = new Chart(ctx, {
+                type: 'pie',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // تحديث الرسم البياني الخطي
+        function updateLineChart(monthlyData) {
+            const ctx = document.getElementById('lineChart');
+            if (!ctx) return;
+            
+            if (lineChart) {
+                lineChart.destroy();
+            }
+            
+            // إعداد البيانات لآخر 6 أشهر
+            const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'];
+            let data = [2, 4, 3, 5, 2, 6]; // بيانات تجريبية
+            
+            if (monthlyData && monthlyData.length > 0) {
+                // استخدام البيانات الحقيقية إذا توفرت
+                data = monthlyData.slice(-6).map(item => item.monthly_count || 0);
+            }
+            
+            lineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'عدد الطلبات',
+                        data: data,
+                        borderColor: '#2196F3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // جلب آخر التقييمات
+        async function loadLatestRatings() {
+            try {
+                console.log('⭐ جلب آخر التقييمات...');
+                const result = await dbAPI.getRatings();
+                console.log('📊 نتيجة التقييمات:', result);
+                
+                if (result.success && result.ratings) {
+                    displayLatestRatings(result.ratings.slice(0, 5)); // أحدث 5 تقييمات
+                } else {
+                    console.log('لا توجد تقييمات متاحة');
+                    displayLatestRatings([]);
+                }
+            } catch (error) {
+                console.error('❌ خطأ في جلب التقييمات:', error);
+                displayLatestRatings([]);
+            }
+        }
+
+        // عرض آخر التقييمات
+        function displayLatestRatings(ratings) {
+            const tbody = document.getElementById('ratingsTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            if (!ratings || ratings.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #666;">لا توجد تقييمات</td></tr>';
+                return;
+            }
+            
+            ratings.forEach(rating => {
+                const row = document.createElement('tr');
+                
+                // تنسيق التاريخ
+                const date = new Date(rating.created_at);
+                const formattedDate = date.toLocaleDateString('ar-SA', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                
+                // تنسيق النجوم
+                const qualityStars = '★'.repeat(rating.quality_rate || 0) + '☆'.repeat(5 - (rating.quality_rate || 0));
+                const speedStars = '★'.repeat(rating.speed_rate || 0) + '☆'.repeat(5 - (rating.speed_rate || 0));
+                
+                row.innerHTML = `
+                    <td><strong>#${rating.request_id || '-'}</strong></td>
+                    <td>${rating.subject || 'طلب غير محدد'}</td>
+                    <td>${rating.customer_name || rating.full_name || rating.display_name || 'غير محدد'}</td>
+                    <td style="color: #FF6B35;">${qualityStars}</td>
+                    <td style="color: #4ECDC4;">${speedStars}</td>
+                    <td>${formattedDate}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // دوال مساعدة لتحويل النصوص
+        function getRequestTypeText(type) {
+            const types = {
+                'technical': 'تقني',
+                'administrative': 'إداري',
+                'financial': 'مالي',
+                'hr': 'موارد بشرية',
+                'maintenance': 'صيانة',
+                'other': 'أخرى'
+            };
+            return types[type] || 'غير محدد';
+        }
+
+        function getPriorityText(priority) {
+            const priorities = {
+                'low': 'منخفضة',
+                'medium': 'متوسطة',
+                'high': 'عالية',
+                'urgent': 'عاجلة'
+            };
+            return priorities[priority] || 'متوسطة';
+        }
+
+        function getStatusText(status) {
+            const statuses = {
+                'pending': 'قيد الانتظار',
+                'in_progress': 'قيد التنفيذ',
+                'completed': 'مكتملة',
+                'rejected': 'لم يتم التنفيذ'
+            };
+            return statuses[status] || 'غير محدد';
+        }
+
+        // دوال إدارة عرض جميع التقييمات
+        function showAllRatings() {
+            console.log('🌟 عرض جميع التقييمات...');
+            
+            // إخفاء لوحة التحكم وإظهار قسم التقييمات
+            document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('all-ratings-section').classList.remove('hidden');
+            
+            // تحديث عنوان الصفحة
+            document.getElementById('pageTitle').textContent = 'جميع التقييمات';
+            
+            // جلب وعرض جميع التقييمات
+            loadAllRatings();
+        }
+
+        function goBackToDashboard() {
+            console.log('🏠 العودة للوحة التحكم...');
+            
+            // إخفاء قسم التقييمات وإظهار لوحة التحكم
+            document.getElementById('all-ratings-section').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.remove('hidden');
+            
+            // تحديث عنوان الصفحة
+            document.getElementById('pageTitle').textContent = 'لوحة التحكم';
+        }
+
+        async function loadAllRatings() {
+            try {
+                console.log('📊 جلب جميع التقييمات...');
+                const result = await dbAPI.getRatings();
+                
+                if (result.success && result.ratings) {
+                    displayAllRatings(result.ratings);
+                    updateRatingsStats(result.ratings);
+                } else {
+                    console.log('لا توجد تقييمات متاحة');
+                    displayAllRatings([]);
+                    updateRatingsStats([]);
+                }
+            } catch (error) {
+                console.error('❌ خطأ في جلب التقييمات:', error);
+                displayAllRatings([]);
+                updateRatingsStats([]);
+            }
+        }
+
+        function displayAllRatings(ratings) {
+            const tbody = document.getElementById('allRatingsTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            if (!ratings || ratings.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #666;">لا توجد تقييمات</td></tr>';
+                return;
+            }
+            
+            ratings.forEach(rating => {
+                const row = document.createElement('tr');
+                
+                // تنسيق التاريخ
+                const date = new Date(rating.created_at);
+                const formattedDate = date.toLocaleDateString('ar-SA', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                
+                // تنسيق النجوم
+                const qualityStars = '★'.repeat(rating.quality_rate || 0) + '☆'.repeat(5 - (rating.quality_rate || 0));
+                const speedStars = '★'.repeat(rating.speed_rate || 0) + '☆'.repeat(5 - (rating.speed_rate || 0));
+                
+                // حساب المتوسط
+                const avgRating = ((rating.quality_rate || 0) + (rating.speed_rate || 0)) / 2;
+                const avgStars = '★'.repeat(Math.round(avgRating)) + '☆'.repeat(5 - Math.round(avgRating));
+                
+                row.innerHTML = `
+                    <td><strong>#${rating.request_id || '-'}</strong></td>
+                    <td style="color: #2c5aa0; font-weight: bold;">${rating.customer_name || rating.full_name || rating.display_name || 'غير محدد'}</td>
+                    <td>${rating.subject || 'طلب غير محدد'}</td>
+                    <td style="color: #FF6B35;">${qualityStars}</td>
+                    <td style="color: #4ECDC4;">${speedStars}</td>
+                    <td style="color: #ffd700; font-weight: bold;">${avgStars} (${avgRating.toFixed(1)})</td>
+                    <td>${formattedDate}</td>
+                    <td style="max-width: 200px; word-wrap: break-word;">${rating.comment || 'لا يوجد تعليق'}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateRatingsStats(ratings) {
+            if (!ratings || ratings.length === 0) {
+                document.getElementById('totalRatingsCount').textContent = '0';
+                document.getElementById('avgQualityRating').textContent = '0.0';
+                document.getElementById('avgSpeedRating').textContent = '0.0';
+                document.getElementById('overallAvgRating').textContent = '0.0';
+                return;
+            }
+            
+            const totalRatings = ratings.length;
+            const totalQuality = ratings.reduce((sum, rating) => sum + (rating.quality_rate || 0), 0);
+            const totalSpeed = ratings.reduce((sum, rating) => sum + (rating.speed_rate || 0), 0);
+            
+            const avgQuality = totalRatings > 0 ? (totalQuality / totalRatings).toFixed(1) : '0.0';
+            const avgSpeed = totalRatings > 0 ? (totalSpeed / totalRatings).toFixed(1) : '0.0';
+            const overallAvg = totalRatings > 0 ? ((parseFloat(avgQuality) + parseFloat(avgSpeed)) / 2).toFixed(1) : '0.0';
+            
+            document.getElementById('totalRatingsCount').textContent = totalRatings;
+            document.getElementById('avgQualityRating').textContent = avgQuality;
+            document.getElementById('avgSpeedRating').textContent = avgSpeed;
+            document.getElementById('overallAvgRating').textContent = overallAvg;
+        }
+
+        function filterRatings() {
+            const filterValue = document.getElementById('ratingFilter').value;
+            const tbody = document.getElementById('allRatingsTableBody');
+            const rows = tbody.getElementsByTagName('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                if (row.cells.length < 6) continue; // تجاهل الصفوف الفارغة
+                
+                const avgCell = row.cells[5].textContent; // عمود المتوسط
+                const avgMatch = avgCell.match(/\((\d+\.?\d*)\)/);
+                const avgRating = avgMatch ? parseFloat(avgMatch[1]) : 0;
+                
+                if (!filterValue || avgRating >= parseFloat(filterValue)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

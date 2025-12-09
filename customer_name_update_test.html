@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👤 اختبار تحديث أسماء العملاء</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Cairo', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background: linear-gradient(120deg, #eaf2fb 0%, #b6e2d3 60%, #f5f5dc 100%);
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #b6e2d3 60%, #f5f5dc 100%);
+            color: #2d5c8a;
+            padding: 30px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .demo-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .demo-title {
+            color: #2d5c8a;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(90deg, #b6e2d3 60%, #f5f5dc 100%);
+            color: #3b5e4d;
+            font-weight: 700;
+        }
+
+        .old-column {
+            background: #fff3cd !important;
+            color: #856404;
+            text-decoration: line-through;
+        }
+
+        .new-column {
+            background: #d4edda !important;
+            color: #155724;
+            font-weight: 600;
+        }
+
+        .arrow {
+            font-size: 1.5rem;
+            color: #007bff;
+        }
+
+        .update-badge {
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-right: 8px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .nav-btn {
+            background: linear-gradient(90deg, #b6e2d3, #f5f5dc);
+            color: #3b5e4d;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(90deg, #f5f5dc, #b6e2d3);
+            transform: translateY(-2px);
+            color: #3b5e4d;
+            text-decoration: none;
+        }
+
+        .code-changes {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            margin: 20px 0;
+        }
+
+        .code-line {
+            font-family: 'Courier New', monospace;
+            background: #e9ecef;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .removed {
+            background: #f8d7da !important;
+            color: #721c24;
+            text-decoration: line-through;
+        }
+
+        .added {
+            background: #d4edda !important;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            👤 تحديث أسماء العملاء في النظام
+        </div>
+
+        <div class="demo-card">
+            <div class="demo-title">📋 مقارنة عناوين الأعمدة</div>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>العمود</th>
+                        <th>قبل التحديث</th>
+                        <th></th>
+                        <th>بعد التحديث</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>عمود المستخدم</strong></td>
+                        <td class="old-column">اسم المستخدم</td>
+                        <td class="arrow">→</td>
+                        <td class="new-column">اسم العميل</td>
+                        <td><span class="update-badge">محدث</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>النص الترحيبي</strong></td>
+                        <td class="old-column">مدير النظام</td>
+                        <td class="arrow">→</td>
+                        <td class="new-column">الإدارة</td>
+                        <td><span class="update-badge">محدث</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="demo-card">
+            <div class="demo-title">🔧 التغييرات المطبقة في الكود</div>
+            
+            <div class="code-changes">
+                <h4 style="color: #2d5c8a; margin-bottom: 15px;">1. تحديث عنوان العمود في الجدول:</h4>
+                <div class="code-line removed">❌ &lt;th&gt;اسم المستخدم&lt;/th&gt;</div>
+                <div class="code-line added">✅ &lt;th&gt;اسم العميل&lt;/th&gt;</div>
+            </div>
+
+            <div class="code-changes">
+                <h4 style="color: #2d5c8a; margin-bottom: 15px;">2. تحديث النص الترحيبي:</h4>
+                <div class="code-line removed">❌ مرحباً، &lt;strong&gt;مدير النظام&lt;/strong&gt;</div>
+                <div class="code-line added">✅ مرحباً، &lt;strong&gt;الإدارة&lt;/strong&gt;</div>
+            </div>
+
+            <div class="code-changes">
+                <h4 style="color: #2d5c8a; margin-bottom: 15px;">3. تحديث أولوية عرض البيانات:</h4>
+                <div class="code-line removed">❌ ${rating.full_name || rating.username || 'غير محدد'}</div>
+                <div class="code-line added">✅ ${rating.customer_name || rating.full_name || rating.display_name || 'غير محدد'}</div>
+            </div>
+        </div>
+
+        <div class="demo-card">
+            <div class="demo-title">📊 جدول تجريبي - كيف ستظهر البيانات</div>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>رقم الطلب</th>
+                        <th>الموضوع</th>
+                        <th>اسم العميل</th>
+                        <th>تقييم الجودة</th>
+                        <th>تقييم السرعة</th>
+                        <th>التاريخ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>#14</strong></td>
+                        <td>طلب خدمة</td>
+                        <td style="color: #2c5aa0; font-weight: bold;">أحمد محمد</td>
+                        <td style="color: #FF6B35;">★★★★★</td>
+                        <td style="color: #4ECDC4;">★★★★☆</td>
+                        <td>12 جمادى الأول 1447 هـ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>#17</strong></td>
+                        <td>صيانة مكيف الهواء</td>
+                        <td style="color: #2c5aa0; font-weight: bold;">فاطمة أحمد</td>
+                        <td style="color: #FF6B35;">★★★★★</td>
+                        <td style="color: #4ECDC4;">★★★★★</td>
+                        <td>12 جمادى الأول 1447 هـ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>#13</strong></td>
+                        <td>طلب خدمة</td>
+                        <td style="color: #2c5aa0; font-weight: bold;">محمد علي</td>
+                        <td style="color: #FF6B35;">★★★★★</td>
+                        <td style="color: #4ECDC4;">★★★★★</td>
+                        <td>11 جمادى الأول 1447 هـ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>#6</strong></td>
+                        <td>طلب خدمة</td>
+                        <td style="color: #2c5aa0; font-weight: bold;">سارة حسن</td>
+                        <td style="color: #FF6B35;">☆☆☆☆★</td>
+                        <td style="color: #4ECDC4;">☆☆☆☆★</td>
+                        <td>7 جمادى الأول 1447 هـ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>#3</strong></td>
+                        <td>صيانة مكيف</td>
+                        <td style="color: #2c5aa0; font-weight: bold;">يوسف خالد</td>
+                        <td style="color: #FF6B35;">★★★★★</td>
+                        <td style="color: #4ECDC4;">★★★★★</td>
+                        <td>7 جمادى الأول 1447 هـ</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="demo-card">
+            <div class="demo-title">✅ الملفات المحدثة</div>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                        <span class="update-badge">محدث</span>
+                        <i class="fas fa-file-code" style="color: #28a745; margin-left: 10px;"></i>
+                        <strong>admin.html</strong> - تحديث عناوين الأعمدة وأولوية البيانات
+                    </li>
+                </ul>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #d4edda; border-radius: 8px; color: #155724;">
+                    <strong>🎯 النتيجة:</strong>
+                    <p style="margin: 10px 0 0 0;">الآن جميع الجداول تعرض "اسم العميل" بدلاً من "اسم المستخدم" وتم حذف أي إشارة لـ "المدير العام"!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="admin.html" class="nav-btn">
+                <i class="fas fa-tachometer-alt"></i>
+                جرب لوحة الإدارة المحدثة
+            </a>
+            <a href="orders.php" class="nav-btn">
+                <i class="fas fa-list"></i>
+                جرب صفحة الطلبات
+            </a>
+        </div>
+    </div>
+</body>
+</html>

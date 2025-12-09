@@ -1,0 +1,213 @@
+      
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <style>
+        body {
+            font-family: 'Cairo', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e6f4ea 60%, #f5f5dc 100%);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+        }
+        body:after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            background: url('https://www.transparenttextures.com/patterns/hexellence.png'),
+                        radial-gradient(circle at 80% 10%, #b6e2d3aa 0%, transparent 60%),
+                        radial-gradient(circle at 10% 80%, #f5f5dcaa 0%, transparent 60%);
+            opacity: 0.4;
+        }
+        .header {
+            background: linear-gradient(90deg, #b6e2d3 60%, #f5f5dc 100%);
+            color: #3b5e4d;
+            padding: 40px 0 28px 0;
+            text-align: center;
+            font-size: 2.7rem;
+            letter-spacing: 2px;
+            box-shadow: 0 2px 24px rgba(0,0,0,0.13);
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            font-weight: bold;
+            text-shadow: 1px 2px 12px #2d5c8a44;
+            position: relative;
+            z-index: 1;
+        }
+        .login-container {
+            max-width: 410px;
+            margin: 80px auto 0 auto;
+            background: rgba(255,255,255,0.98);
+            border-radius: 32px;
+            box-shadow: 0 12px 40px #b6e2d355, 0 2px 12px #bdbdbd33;
+            padding: 48px 38px 38px 38px;
+            position: relative;
+            border: 2.5px solid #e0e6f3;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .login-container:before {
+            content: "";
+            position: absolute;
+            top: -22px; left: 50%;
+            transform: translateX(-50%);
+            width: 70px; height: 8px;
+            background: linear-gradient(90deg, #b6e2d3, #f5f5dc);
+            border-radius: 10px;
+            opacity: 0.8;
+        }
+        h2 {
+            text-align: center;
+            color: #3b5e4d;
+            margin-bottom: 28px;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 1px 2px 12px #2d5c8a22;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #3b5e4d;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            border-radius: 14px;
+            border: 2px solid #e0e6f3;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 8px #b6e2d322;
+            transition: border 0.2s;
+        }
+        input:focus {
+            border: 2px solid #3b5e4d;
+            outline: none;
+        }
+        .main-btn, button[type="submit"] {
+            font-size: 1.35rem !important;
+            padding: 16px 0 !important;
+            border-radius: 14px !important;
+            background: linear-gradient(90deg,#b6e2d3,#f5f5dc) !important;
+            color: #3b5e4d !important;
+            font-weight: bold !important;
+            box-shadow: 0 2px 12px #b6e2d322 !important;
+            width: 100% !important;
+            border: none !important;
+            transition: background 0.2s;
+        }
+        .main-btn:hover, button[type="submit"]:hover {
+            background: linear-gradient(90deg,#a3d9c7,#f5f5dc) !important;
+            color: #2d5c8a !important;
+        }
+        #loginError {
+            color: #c0392b;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+        @media (max-width: 600px) {
+            .login-container {
+                max-width: 98vw;
+                padding: 18px 8px 18px 8px;
+            }
+            h2 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">النظام الإداري</div>
+    <div class="login-container">
+        <h2>تسجيل الدخول</h2>
+        <form id="loginForm" style="max-width:420px; margin:0 auto; background:#f8fafc; border-radius:18px; box-shadow:0 2px 12px #b6e2d322; padding:32px 28px; border:1.5px solid #b6e2d3; display:flex; flex-direction:column; gap:18px; align-items:center;">
+            <div style="width:100%; display:flex; flex-direction:column; gap:8px;">
+                <label for="username" style="font-size:1.13rem; color:#3b5e4d; font-weight:bold;">اسم المستخدم</label>
+                <input type="text" id="username" required style="margin-bottom:8px; font-size:1.08rem; border-radius:12px; border:2px solid #b6e2d3; background:#f8fafc; padding:12px;">
+            </div>
+            <div style="width:100%; display:flex; flex-direction:column; gap:8px;">
+                <label for="password" style="font-size:1.13rem; color:#3b5e4d; font-weight:bold;">كلمة السر</label>
+                <input type="password" id="password" required style="margin-bottom:8px; font-size:1.08rem; border-radius:12px; border:2px solid #b6e2d3; background:#f8fafc; padding:12px;">
+            </div>
+            <button type="submit" class="main-btn" style="width:100%;margin-top:10px; font-size:1.35rem; padding:16px 0; border-radius:14px; background:linear-gradient(90deg,#b6e2d3,#f5f5dc); color:#3b5e4d; font-weight:bold; box-shadow:0 2px 12px #b6e2d322;">دخول</button>
+            <div id="loginError" style="color:#c0392b; font-weight:bold; margin-top:10px; display:none; text-align:center;">بيانات الدخول غير صحيحة</div>
+            <div style="margin-top:15px; text-align:center; font-size:0.9rem; color:#666;">
+                <div style="background:#f0f8ff; padding:10px; border-radius:8px; margin-top:10px;">
+                    <strong>للاختبار - بيانات المدير:</strong><br>
+                    المستخدم: admin | كلمة المرور: admin123
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <!-- إضافة ملف JavaScript لقاعدة البيانات -->
+    <script src="js/api.js"></script>
+    <script>
+        document.getElementById('loginForm').onsubmit = async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorDiv = document.getElementById('loginError');
+            
+            // إخفاء رسالة الخطأ
+            errorDiv.style.display = 'none';
+            
+            // تغيير نص الزر أثناء المعالجة
+            const submitBtn = document.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'جاري تسجيل الدخول...';
+            submitBtn.disabled = true;
+            
+            try {
+                // محاولة تسجيل الدخول
+                const result = await dbAPI.login(username, password);
+                
+                if (result.success) {
+                    // تسجيل دخول ناجح
+                    if (result.user.role === 'admin') {
+                        window.location.href = 'admin.html';
+                    } else {
+                        window.location.href = '2.html';
+                    }
+                } else {
+                    // خطأ في تسجيل الدخول
+                    errorDiv.textContent = result.message || 'بيانات الدخول غير صحيحة';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('خطأ في تسجيل الدخول:', error);
+                errorDiv.textContent = 'خطأ في الاتصال بالخادم';
+                errorDiv.style.display = 'block';
+            } finally {
+                // إعادة تعيين الزر
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        };
+        
+        // إذا كان المستخدم مسجل دخول بالفعل، إعادة توجيه
+        if (dbAPI.isLoggedIn()) {
+            const user = dbAPI.getCurrentUser();
+            if (user.role === 'admin') {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = '2.html';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مراقب اتصال قاعدة البيانات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e6f4ea 60%, #f5f5dc 100%);
+            min-height: 100vh;
+            direction: rtl;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #b6e2d3 60%, #f5f5dc 100%);
+            color: #2d5c8a;
+            padding: 30px;
+            text-align: center;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(182, 226, 211, 0.3);
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(182, 226, 211, 0.1);
+            border: 1px solid rgba(182, 226, 211, 0.3);
+            transition: all 0.3s;
+        }
+
+        .status-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .status-light {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-light.online {
+            background: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        .status-light.offline {
+            background: #ef4444;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+
+        .status-light.warning {
+            background: #f59e0b;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .status-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .status-details {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #b6e2d3, #f5f5dc);
+            color: #2d5c8a;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 10px 0;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(182, 226, 211, 0.3);
+        }
+
+        .auto-refresh {
+            text-align: center;
+            margin: 20px 0;
+            color: #6b7280;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #b6e2d3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .navigation {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .nav-link {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #b6e2d3, #f5f5dc);
+            color: #2d5c8a;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(182, 226, 211, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-heartbeat"></i> مراقب اتصال قاعدة البيانات</h1>
+            <p>مراقبة مباشرة وفي الوقت الفعلي لحالة الاتصال</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <a href="index.html" class="nav-link"><i class="fas fa-home"></i> الصفحة الرئيسية</a>
+            <a href="connection_test.php" class="nav-link"><i class="fas fa-database"></i> فحص شامل</a>
+            <a href="track.html" class="nav-link"><i class="fas fa-search"></i> تتبع الطلبات</a>
+            <a href="admin.html" class="nav-link"><i class="fas fa-user-shield"></i> لوحة الإدارة</a>
+        </div>
+
+        <!-- Database Connection Status -->
+        <div class="status-card">
+            <div class="status-indicator">
+                <div class="status-light" id="dbStatusLight"></div>
+                <div class="status-text" id="dbStatusText">جاري فحص الاتصال...</div>
+            </div>
+            <div class="status-details" id="dbStatusDetails">
+                <div class="loading">جاري التحقق من الاتصال <span class="spinner"></span></div>
+            </div>
+        </div>
+
+        <!-- API Status -->
+        <div class="status-card">
+            <div class="status-indicator">
+                <div class="status-light" id="apiStatusLight"></div>
+                <div class="status-text" id="apiStatusText">جاري فحص API...</div>
+            </div>
+            <div class="status-details" id="apiStatusDetails">
+                <div class="loading">جاري التحقق من API <span class="spinner"></span></div>
+            </div>
+        </div>
+
+        <!-- System Statistics -->
+        <div class="status-card">
+            <div class="status-indicator">
+                <div class="status-light" id="systemStatusLight"></div>
+                <div class="status-text" id="systemStatusText">جاري فحص النظام...</div>
+            </div>
+            <div class="status-details" id="systemStatusDetails">
+                <div class="loading">جاري جمع الإحصائيات <span class="spinner"></span></div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div style="text-align: center;">
+            <button class="refresh-btn" onclick="runAllChecks()">
+                <i class="fas fa-sync-alt"></i> تحديث الآن
+            </button>
+            <button class="refresh-btn" onclick="toggleAutoRefresh()">
+                <i class="fas fa-clock"></i> <span id="autoRefreshText">إيقاف التحديث التلقائي</span>
+            </button>
+        </div>
+
+        <div class="auto-refresh">
+            <p>آخر تحديث: <span id="lastUpdate">-</span></p>
+            <p>التحديث التلقائي: كل 10 ثواني</p>
+        </div>
+    </div>
+
+    <script>
+        let autoRefresh = true;
+        let refreshInterval;
+
+        // بدء التشغيل
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 بدء تشغيل مراقب قاعدة البيانات');
+            runAllChecks();
+            startAutoRefresh();
+        });
+
+        // فحص شامل
+        async function runAllChecks() {
+            console.log('🔍 تشغيل الفحص الشامل...');
+            updateLastUpdate();
+            
+            await checkDatabaseConnection();
+            await checkAPIStatus();
+            await checkSystemStatistics();
+        }
+
+        // فحص اتصال قاعدة البيانات
+        async function checkDatabaseConnection() {
+            const statusLight = document.getElementById('dbStatusLight');
+            const statusText = document.getElementById('dbStatusText');
+            const statusDetails = document.getElementById('dbStatusDetails');
+
+            try {
+                const response = await fetch('quick_test.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    statusLight.className = 'status-light online';
+                    statusText.textContent = 'قاعدة البيانات متصلة';
+                    statusDetails.innerHTML = `
+                        <strong>✅ الاتصال نشط</strong><br>
+                        • عدد الجداول: ${data.data.tables ? data.data.tables.length : 'غير محدد'}<br>
+                        • إجمالي الطلبات: ${data.data.requests_count || 0}<br>
+                        • إجمالي التقييمات: ${data.data.ratings_count || 0}<br>
+                        • آخر فحص: ${new Date().toLocaleTimeString('ar-SA')}
+                    `;
+                } else {
+                    throw new Error(data.message || 'خطأ غير محدد');
+                }
+            } catch (error) {
+                statusLight.className = 'status-light offline';
+                statusText.textContent = 'مشكلة في قاعدة البيانات';
+                statusDetails.innerHTML = `
+                    <strong>❌ خطأ في الاتصال</strong><br>
+                    التفاصيل: ${error.message}<br>
+                    الوقت: ${new Date().toLocaleTimeString('ar-SA')}
+                `;
+            }
+        }
+
+        // فحص حالة API
+        async function checkAPIStatus() {
+            const statusLight = document.getElementById('apiStatusLight');
+            const statusText = document.getElementById('apiStatusText');
+            const statusDetails = document.getElementById('apiStatusDetails');
+
+            try {
+                const response = await fetch('api/requests.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'get_all'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    const requestsCount = (data.data || data.requests || []).length;
+                    statusLight.className = 'status-light online';
+                    statusText.textContent = 'API يعمل بنجاح';
+                    statusDetails.innerHTML = `
+                        <strong>✅ API متاح</strong><br>
+                        • حالة الاستجابة: ${response.status}<br>
+                        • الطلبات المسترجعة: ${requestsCount}<br>
+                        • زمن الاستجابة: سريع<br>
+                        • آخر فحص: ${new Date().toLocaleTimeString('ar-SA')}
+                    `;
+                } else {
+                    throw new Error(data.message || 'استجابة API غير صحيحة');
+                }
+            } catch (error) {
+                statusLight.className = 'status-light offline';
+                statusText.textContent = 'مشكلة في API';
+                statusDetails.innerHTML = `
+                    <strong>❌ خطأ في API</strong><br>
+                    التفاصيل: ${error.message}<br>
+                    الوقت: ${new Date().toLocaleTimeString('ar-SA')}
+                `;
+            }
+        }
+
+        // فحص إحصائيات النظام
+        async function checkSystemStatistics() {
+            const statusLight = document.getElementById('systemStatusLight');
+            const statusText = document.getElementById('systemStatusText');
+            const statusDetails = document.getElementById('systemStatusDetails');
+
+            try {
+                const response = await fetch('api/requests.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'get_statistics'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    const stats = data.data;
+                    statusLight.className = 'status-light online';
+                    statusText.textContent = 'إحصائيات النظام';
+                    
+                    let details = '<strong>📊 إحصائيات محدثة</strong><br>';
+                    
+                    if (stats.requests) {
+                        details += `• الطلبات الإجمالية: ${stats.requests.total_requests || 0}<br>`;
+                        details += `• قيد الانتظار: ${stats.requests.pending_requests || 0}<br>`;
+                        details += `• مكتملة: ${stats.requests.completed_requests || 0}<br>`;
+                    }
+                    
+                    if (stats.ratings) {
+                        const avgRating = stats.ratings.avg_quality ? parseFloat(stats.ratings.avg_quality).toFixed(1) : 'غير متوفر';
+                        details += `• متوسط التقييم: ${avgRating}/5<br>`;
+                    }
+                    
+                    details += `• آخر تحديث: ${new Date().toLocaleTimeString('ar-SA')}`;
+                    
+                    statusDetails.innerHTML = details;
+                } else {
+                    statusLight.className = 'status-light warning';
+                    statusText.textContent = 'إحصائيات محدودة';
+                    statusDetails.innerHTML = `
+                        <strong>⚠️ بيانات محدودة</strong><br>
+                        لا توجد إحصائيات كافية أو مشكلة في جلب البيانات<br>
+                        الوقت: ${new Date().toLocaleTimeString('ar-SA')}
+                    `;
+                }
+            } catch (error) {
+                statusLight.className = 'status-light offline';
+                statusText.textContent = 'خطأ في الإحصائيات';
+                statusDetails.innerHTML = `
+                    <strong>❌ خطأ في جلب الإحصائيات</strong><br>
+                    التفاصيل: ${error.message}<br>
+                    الوقت: ${new Date().toLocaleTimeString('ar-SA')}
+                `;
+            }
+        }
+
+        // تحديث وقت آخر فحص
+        function updateLastUpdate() {
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString('ar-SA');
+        }
+
+        // بدء التحديث التلقائي
+        function startAutoRefresh() {
+            if (autoRefresh) {
+                refreshInterval = setInterval(runAllChecks, 10000); // كل 10 ثواني
+            }
+        }
+
+        // إيقاف/تشغيل التحديث التلقائي
+        function toggleAutoRefresh() {
+            autoRefresh = !autoRefresh;
+            const button = document.getElementById('autoRefreshText');
+            
+            if (autoRefresh) {
+                startAutoRefresh();
+                button.textContent = 'إيقاف التحديث التلقائي';
+            } else {
+                clearInterval(refreshInterval);
+                button.textContent = 'تشغيل التحديث التلقائي';
+            }
+        }
+
+        console.log('✅ مراقب قاعدة البيانات جاهز للعمل');
+    </script>
+</body>
+</html>
