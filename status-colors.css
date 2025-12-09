@@ -1,0 +1,161 @@
+/* ==========================================================================
+   نظام الألوان الموحد لحالات الطلبات
+   ========================================================================== */
+
+/* الألوان الأساسية للحالات */
+:root {
+    /* الحالات المكتملة - أخضر */
+    --status-completed-bg: #d4edda;
+    --status-completed-color: #155724;
+    --status-completed-border: #28a745;
+    
+    /* الحالات قيد التنفيذ/الانتظار - أصفر */
+    --status-pending-bg: #fff3cd;
+    --status-pending-color: #856404;
+    --status-pending-border: #ffc107;
+    
+    --status-in-progress-bg: #fff3cd;
+    --status-in-progress-color: #856404;
+    --status-in-progress-border: #ffc107;
+    
+    /* الحالات المرفوضة/التي لم يتم تنفيذها - أحمر */
+    --status-rejected-bg: #f8d7da;
+    --status-rejected-color: #721c24;
+    --status-rejected-border: #dc3545;
+}
+
+/* كلاسات الحالات الأساسية */
+.status-completed,
+.status-done {
+    background: var(--status-completed-bg);
+    color: var(--status-completed-color);
+    border-color: var(--status-completed-border);
+}
+
+.status-pending {
+    background: var(--status-pending-bg);
+    color: var(--status-pending-color);
+    border-color: var(--status-pending-border);
+}
+
+.status-in_progress,
+.status-progress {
+    background: var(--status-in-progress-bg);
+    color: var(--status-in-progress-color);
+    border-color: var(--status-in-progress-border);
+}
+
+.status-rejected,
+.status-not {
+    background: var(--status-rejected-bg);
+    color: var(--status-rejected-color);
+    border-color: var(--status-rejected-border);
+}
+
+/* تطبيق التنسيق العام للحالات */
+.status-completed,
+.status-done,
+.status-pending,
+.status-in_progress,
+.status-progress,
+.status-rejected,
+.status-not {
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 6px 12px;
+    text-align: center;
+    border: 1px solid;
+    display: inline-block;
+    font-size: 0.9rem;
+}
+
+/* تنسيقات إضافية للبادجات */
+.status-badge.status-completed { background: var(--status-completed-bg); color: var(--status-completed-color); border-color: var(--status-completed-border); }
+.status-badge.status-pending { background: var(--status-pending-bg); color: var(--status-pending-color); border-color: var(--status-pending-border); }
+.status-badge.status-in_progress { background: var(--status-in-progress-bg); color: var(--status-in-progress-color); border-color: var(--status-in-progress-border); }
+.status-badge.status-rejected { background: var(--status-rejected-bg); color: var(--status-rejected-color); border-color: var(--status-rejected-border); }
+
+/* تنسيقات للجداول */
+.table-row.status-completed { background-color: var(--status-completed-bg) !important; }
+.table-row.status-pending { background-color: var(--status-pending-bg) !important; }
+.table-row.status-in_progress { background-color: var(--status-in-progress-bg) !important; }
+.table-row.status-rejected { background-color: var(--status-rejected-bg) !important; }
+
+/* أنماط للتسميات التوضيحية */
+.status-legend {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+    align-items: center;
+}
+
+.status-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.status-legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.legend-completed { background: var(--status-completed-bg); }
+.legend-pending { background: var(--status-pending-bg); }
+.legend-in-progress { background: var(--status-in-progress-bg); }
+.legend-rejected { background: var(--status-rejected-bg); }
+
+/* الألوان للأولويات (للتوافق مع النظام الحالي) */
+.priority-low { background: var(--status-completed-bg); color: var(--status-completed-color); }
+.priority-medium { background: var(--status-pending-bg); color: var(--status-pending-color); }
+.priority-high { background: var(--status-rejected-bg); color: var(--status-rejected-color); }
+.priority-urgent { background: #6f42c1; color: white; }
+
+/* تنسيقات للأزرار */
+.btn-status-completed { background: var(--status-completed-bg); color: var(--status-completed-color); border-color: var(--status-completed-border); }
+.btn-status-pending { background: var(--status-pending-bg); color: var(--status-pending-color); border-color: var(--status-pending-border); }
+.btn-status-in_progress { background: var(--status-in-progress-bg); color: var(--status-in-progress-color); border-color: var(--status-in-progress-border); }
+.btn-status-rejected { background: var(--status-rejected-bg); color: var(--status-rejected-color); border-color: var(--status-rejected-border); }
+
+/* تنسيقات متجاوبة */
+@media (max-width: 768px) {
+    .status-completed,
+    .status-done,
+    .status-pending,
+    .status-in_progress,
+    .status-progress,
+    .status-rejected,
+    .status-not {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+    
+    .status-legend {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* تنسيقات للطباعة */
+@media print {
+    .status-completed,
+    .status-done,
+    .status-pending,
+    .status-in_progress,
+    .status-progress,
+    .status-rejected,
+    .status-not {
+        background: white !important;
+        color: black !important;
+        border: 2px solid black !important;
+    }
+    
+    .status-completed:after { content: " (مكتمل)"; }
+    .status-pending:after { content: " (قيد الانتظار)"; }
+    .status-in_progress:after { content: " (قيد التنفيذ)"; }
+    .status-rejected:after { content: " (لم يتم التنفيذ)"; }
+}
