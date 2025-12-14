@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 نظام التقييم - دليل الاستخدام</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Cairo', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(120deg, #eaf2fb 0%, #b6e2d3 60%, #f5f5dc 100%);
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2d5c8a;
+        }
+        .feature-box {
+            background: linear-gradient(120deg, rgba(182, 226, 211, 0.15), rgba(245, 245, 220, 0.15));
+            border: 2px solid #b6e2d3;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .success-box {
+            background: linear-gradient(120deg, rgba(40, 167, 69, 0.15), rgba(32, 201, 151, 0.15));
+            border: 3px solid #28a745;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .steps {
+            counter-reset: step-counter;
+        }
+        .step {
+            counter-increment: step-counter;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-right: 5px solid #b6e2d3;
+            position: relative;
+        }
+        .step::before {
+            content: counter(step-counter);
+            position: absolute;
+            right: -15px;
+            top: 15px;
+            background: #b6e2d3;
+            color: #2d5c8a;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .btn {
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            color: #212529;
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        .rating-demo {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #b6e2d3;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .demo-stars {
+            font-size: 2rem;
+            color: #ffd700;
+            margin: 15px 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .status-indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .status-card {
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+        .status-completed { background: linear-gradient(135deg, #28a745, #20c997); }
+        .status-pending { background: linear-gradient(135deg, #ffc107, #fd7e14); }
+        .status-in-progress { background: linear-gradient(135deg, #17a2b8, #007bff); }
+        .status-rejected { background: linear-gradient(135deg, #dc3545, #c82333); }
+        .highlight {
+            background: linear-gradient(120deg, #fff3cd, #ffeaa7);
+            border: 2px solid #ffeb3b;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-star"></i> نظام التقييم المتقدم <i class="fas fa-star"></i></h1>
+            <p style="font-size: 1.2rem; color: #666;">دليل شامل لاستخدام نظام تقييم الخدمات</p>
+        </div>
+
+        <div class="success-box">
+            <h2>✅ المميزات المُفعلة</h2>
+            <ul style="font-size: 1.1rem;">
+                <li><strong>تقييم مرة واحدة فقط:</strong> كل طلب يمكن تقييمه مرة واحدة فقط</li>
+                <li><strong>للطلبات المكتملة فقط:</strong> زر التقييم يظهر فقط للطلبات المنجزة</li>
+                <li><strong>تصميم تفاعلي:</strong> نجوم ذهبية مع تأثيرات حركية</li>
+                <li><strong>حفظ تلقائي:</strong> التقييمات تُحفظ في قاعدة البيانات فوراً</li>
+                <li><strong>عرض في الداشبورد:</strong> إحصائيات مفصلة في لوحة الإدارة</li>
+            </ul>
+        </div>
+
+        <div class="feature-box">
+            <h2>🎯 كيفية استخدام نظام التقييم</h2>
+            <div class="steps">
+                <div class="step">
+                    <h3>الانتقال لصفحة تتبع الطلبات</h3>
+                    <p>اذهب إلى صفحة <strong>"تتبع الطلبات"</strong> لعرض جميع طلباتك</p>
+                </div>
+                
+                <div class="step">
+                    <h3>البحث عن الطلبات المكتملة</h3>
+                    <p>ابحث عن الطلبات التي تظهر بحالة <span class="status-card status-completed" style="display: inline; padding: 5px 10px; font-size: 0.9rem;">تم التنفيذ</span></p>
+                </div>
+                
+                <div class="step">
+                    <h3>النقر على زر التقييم</h3>
+                    <p>اضغط على زر <strong>"⭐ تقييم"</strong> بجانب الطلب المكتمل</p>
+                </div>
+                
+                <div class="step">
+                    <h3>اختيار التقييم</h3>
+                    <p>اختر عدد النجوم من 1 إلى 5 حسب جودة الخدمة</p>
+                    <div class="rating-demo">
+                        <div class="demo-stars">★★★★★</div>
+                        <p>5 نجوم = ممتاز | 4 نجوم = جيد جداً | 3 نجوم = جيد | 2 نجوم = مقبول | 1 نجمة = ضعيف</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <h3>إضافة تعليق (اختياري)</h3>
+                    <p>يمكنك كتابة تعليق لوصف تجربتك مع الخدمة</p>
+                </div>
+                
+                <div class="step">
+                    <h3>إرسال التقييم</h3>
+                    <p>اضغط على <strong>"إرسال التقييم"</strong> لحفظ تقييمك نهائياً</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <h3><i class="fas fa-exclamation-triangle"></i> ملاحظات مهمة</h3>
+            <ul>
+                <li><strong>تقييم واحد فقط:</strong> بمجرد إرسال التقييم، لا يمكن تغييره أو إرسال تقييم آخر</li>
+                <li><strong>للطلبات المكتملة:</strong> زر التقييم يظهر فقط عند اكتمال الطلب</li>
+                <li><strong>حفظ فوري:</strong> التقييم يُحفظ في النظام فور إرساله</li>
+                <li><strong>عرض للإدارة:</strong> التقييمات تظهر في لوحة الإدارة لمتابعة الأداء</li>
+            </ul>
+        </div>
+
+        <div class="feature-box">
+            <h2>📊 حالات الطلبات</h2>
+            <div class="status-indicators">
+                <div class="status-card status-completed">
+                    <i class="fas fa-check-circle"></i><br>
+                    تم التنفيذ<br>
+                    <small>(يمكن التقييم)</small>
+                </div>
+                <div class="status-card status-in-progress">
+                    <i class="fas fa-clock"></i><br>
+                    قيد التنفيذ<br>
+                    <small>(انتظر الانتهاء)</small>
+                </div>
+                <div class="status-card status-pending">
+                    <i class="fas fa-hourglass-half"></i><br>
+                    قيد الانتظار<br>
+                    <small>(لم يبدأ بعد)</small>
+                </div>
+                <div class="status-card status-rejected">
+                    <i class="fas fa-times-circle"></i><br>
+                    مرفوض<br>
+                    <small>(لا يمكن التقييم)</small>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <h2>🚀 جرب النظام الآن</h2>
+            <a href="track.html" class="btn btn-primary" target="_blank">
+                <i class="fas fa-search"></i> تتبع الطلبات والتقييم
+            </a>
+            <a href="request.html" class="btn btn-success" target="_blank">
+                <i class="fas fa-plus"></i> تقديم طلب جديد
+            </a>
+            <a href="admin.html" class="btn btn-warning" target="_blank">
+                <i class="fas fa-chart-bar"></i> عرض إحصائيات التقييمات
+            </a>
+        </div>
+
+        <div class="success-box" style="margin-top: 30px;">
+            <h2 style="text-align: center;">🎉 النظام جاهز للاستخدام!</h2>
+            <p style="text-align: center; font-size: 1.1rem;">
+                نظام التقييم مُفعل ويعمل بكفاءة عالية مع جميع المتطلبات المطلوبة
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // إضافة تأثيرات تفاعلية
+        document.addEventListener('DOMContentLoaded', function() {
+            // تأثير fade-in للعناصر
+            const elements = document.querySelectorAll('.feature-box, .success-box, .step');
+            elements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'all 0.6s ease';
+                
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+        });
+    </script>
+</body>
+</html>
